@@ -2,22 +2,19 @@ package br.com.fiap.findyourmentor.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.components.FormText
 import br.com.fiap.findyourmentor.components.ProfileButton
@@ -29,6 +26,18 @@ fun InterestsScreen(
 ) {
     var route = ""
     var interests = ""
+    var kotlin by remember{
+        mutableStateOf(false)
+    }
+    var java by remember{
+        mutableStateOf(false)
+    }
+    var js by remember{
+        mutableStateOf(false)
+    }
+    var css by remember{
+        mutableStateOf(false)
+    }
 
     if(profileType == "aprendiz"){
         route = "profile/aprendiz"
@@ -44,6 +53,33 @@ fun InterestsScreen(
     ){
         FormText(text = interests)
 
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically){
+            Checkbox(checked = kotlin, onCheckedChange = {
+                kotlin = it
+            })
+            Text(text = "Kotlin")
+        }
+        Row(verticalAlignment = Alignment.CenterVertically){
+            Checkbox(checked = java, onCheckedChange = {
+                java = it
+            })
+            Text(text = "Java")
+        }
+        Row(verticalAlignment = Alignment.CenterVertically){
+            Checkbox(checked = js, onCheckedChange = {
+                js = it
+            })
+            Text(text = "JavaScript")
+        }
+        Row(verticalAlignment = Alignment.CenterVertically){
+            Checkbox(checked = css, onCheckedChange = {
+                css = it
+            })
+            Text(text = "CSS")
+        }
+        
         Spacer(modifier = Modifier.height(20.dp))
 
         ProfileButton(navController = navController, route = route, textButton = "Confirmar")
