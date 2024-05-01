@@ -19,38 +19,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import br.com.fiap.findyourmentor.components.FormText
+import br.com.fiap.findyourmentor.components.ProfileButton
 
 @Composable
 fun InterestsScreen(
     navController: NavController,
     profileType: String
 ) {
+    var route = ""
+    var interests = ""
+
+    if(profileType == "aprendiz"){
+        route = "profile/aprendiz"
+        interests = "Quero aprender:"
+    } else {
+        route = "profile/mentor"
+        interests = "Posso ensinar:"
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        Text(
-            text = "Quero aprender...",
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Monospace
-        )
+        FormText(text = interests)
+
         Spacer(modifier = Modifier.height(20.dp))
-        Button(
-            onClick = { navController.navigate("profile/aprendiz")},
-            modifier = Modifier.width(250.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF412a9c))
-        ) {
-            Text(
-                text = "Confirmar",
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                fontFamily = FontFamily.Monospace
-            )
-        }
+
+        ProfileButton(navController = navController, route = route, textButton = "Confirmar")
     }
 }
 

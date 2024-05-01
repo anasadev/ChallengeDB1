@@ -32,10 +32,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.findyourmentor.screens.InterestsScreen
-import br.com.fiap.findyourmentor.screens.LearningScreen
 import br.com.fiap.findyourmentor.screens.ProfileScreen
 import br.com.fiap.findyourmentor.screens.ProfileTypeScreen
-import br.com.fiap.findyourmentor.screens.SkillsScreen
 import br.com.fiap.findyourmentor.ui.theme.FindYourMentorTheme
 
 class MainActivity : ComponentActivity() {
@@ -60,7 +58,7 @@ class MainActivity : ComponentActivity() {
                             val profileType = it.arguments?.getString("profileType")
                             InterestsScreen(navController, profileType!!)
                         }
-                        composable(route = "profile") {
+                        composable(route = "profile/{profileType}") {
                             val profileType = it.arguments?.getString("profileType")
                             ProfileScreen(navController, profileType!!)
                         }

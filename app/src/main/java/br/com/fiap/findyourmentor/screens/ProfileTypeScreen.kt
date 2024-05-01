@@ -20,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import br.com.fiap.findyourmentor.components.FormText
+import br.com.fiap.findyourmentor.components.ProfileButton
 
 @Composable
 fun ProfileTypeScreen(navController: NavController) {
@@ -27,42 +29,15 @@ fun ProfileTypeScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        Text(
-            text = "Quero ser...",
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Monospace
-        )
+        FormText(text = "Quero ser...")
+
         Spacer(modifier = Modifier.height(20.dp))
-        Button(
-            onClick = { navController.navigate("interests/mentor")},
-            modifier = Modifier.width(250.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF412a9c))
-        ) {
-            Text(
-                text = "... mentor",
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                fontFamily = FontFamily.Monospace
-            )
-        }
+
+        ProfileButton(navController = navController, route = "interests/mentor", textButton = "...mentor")
+
         Spacer(modifier = Modifier.height(10.dp))
-        Button(
-            onClick = { navController.navigate("interests/aprendiz") },
-            modifier = Modifier.width(250.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF412a9c))
-        ) {
-            Text(
-                text = "... aprendiz",
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                fontFamily = FontFamily.Monospace
-            )
-        }
+
+        ProfileButton(navController = navController, route = "interests/aprendiz", textButton = "...aprendiz")
     }
 }
 
