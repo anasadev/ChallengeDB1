@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey(autoGenerate = true) var id: Long = 0,
     var name: String = "",
+    var location: String = "",
     @ColumnInfo(name = "profile_type") var profileType: String = "",
     var presentation: String = "",
     @ColumnInfo(name = "interests_list")

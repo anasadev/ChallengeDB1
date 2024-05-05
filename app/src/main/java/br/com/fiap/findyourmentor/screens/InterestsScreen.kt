@@ -74,7 +74,6 @@ fun InterestsScreen(
         Button(onClick = {
             val user = User(id = 0, profileType = profileType, interestsList = interestsList.joinToString())
             var myId = userRepository.save(user).toString()
-
             navController.navigate("profile/${myId}")
 
          }) {

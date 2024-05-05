@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import br.com.fiap.findyourmentor.screens.InterestsScreen
 import br.com.fiap.findyourmentor.screens.ProfileScreen
 import br.com.fiap.findyourmentor.screens.ProfileTypeScreen
+import br.com.fiap.findyourmentor.screens.UserInfoScreen
 import br.com.fiap.findyourmentor.ui.theme.FindYourMentorTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,8 +29,11 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = "profileType"
+                        startDestination = "personalInfos"
                     ) {
+                        composable(route = "personalInfos") {
+                            UserInfoScreen(navController)
+                        }
                         composable(route = "profileType") {
                             ProfileTypeScreen(navController)
                         }
