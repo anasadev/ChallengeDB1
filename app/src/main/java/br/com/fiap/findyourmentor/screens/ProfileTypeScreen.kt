@@ -29,7 +29,7 @@ fun ProfileTypeScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        FormText(text = "Quero ser...")
+         FormText(text = "Quero ser...")
 
         Spacer(modifier = Modifier.height(20.dp))
 
