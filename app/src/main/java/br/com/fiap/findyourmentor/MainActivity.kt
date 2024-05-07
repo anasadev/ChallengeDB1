@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import br.com.fiap.findyourmentor.screens.HomeProfileScreen
 import br.com.fiap.findyourmentor.screens.InterestsScreen
 import br.com.fiap.findyourmentor.screens.ProfileScreen
 import br.com.fiap.findyourmentor.screens.ProfileTypeScreen
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = "personalInfos"
+                        startDestination = "home"
                     ) {
                         composable(route = "personalInfos") {
                             UserInfoScreen(navController)
@@ -44,6 +45,9 @@ class MainActivity : ComponentActivity() {
                         composable(route = "profile/{myId}") {
                             val myId = it.arguments?.getString("myId")
                             ProfileScreen(navController, myId!!)
+                        }
+                        composable(route = "home") {
+                            HomeProfileScreen()
                         }
                     }
                 }
