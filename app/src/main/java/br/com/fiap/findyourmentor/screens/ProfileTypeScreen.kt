@@ -10,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormText
 import br.com.fiap.findyourmentor.components.ProfileButton
 import br.com.fiap.findyourmentor.database.repository.UserRepository
@@ -27,29 +29,26 @@ fun ProfileTypeScreen(navController: NavController, userId: String) {
         verticalArrangement = Arrangement.Center
     ){
 
-        FormText(text = "Quero ser...")
+        FormText(text = stringResource(id = R.string.want_to_be) )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        //ProfileButton(navController = navController, route = "interests/mentor", textButton = "...mentor")
         Button(onClick = {
             user.profileType = "mentor"
             userRepository.update(user)
             navController.navigate("interests/${userId}")
         }) {
-            Text("...mentor")
+            Text(stringResource(id = R.string.mentor))
         }
 
         Spacer(modifier = Modifier.height(10.dp))
-
-        //ProfileButton(navController = navController, route = "interests/aprendiz", textButton = "...aprendiz")
 
         Button(onClick = {
             user.profileType = "aprendiz"
             userRepository.update(user)
             navController.navigate("interests/${userId}")
         }) {
-            Text("...aprendiz")
+            Text(stringResource(id = R.string.learner))
         }
     }
 }

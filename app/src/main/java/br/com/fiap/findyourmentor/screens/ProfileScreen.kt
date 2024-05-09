@@ -10,8 +10,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormText
 import br.com.fiap.findyourmentor.database.repository.UserRepository
 
@@ -27,19 +29,19 @@ fun ProfileScreen(
     }
     var profileType = myProfile.value.profileType
     var interestsText = ""
-    if(profileType == "aprendiz") interestsText = "Quero aprender" else interestsText = "Posso ensinar"
+    if(profileType == "aprendiz") interestsText = stringResource(id = R.string.interests_text_learner) else interestsText = stringResource(id = R.string.interests_text_mentor)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        FormText(text = "Nome: ${myProfile.value.name}")
+        FormText(text = stringResource(id = R.string.name) + ": ${myProfile.value.name}")
         Spacer(modifier = Modifier.height(20.dp))
-        FormText(text = "Localização: ${myProfile.value.location}")
+        FormText(text = stringResource(id = R.string.user_location) + ": ${myProfile.value.location}")
         Spacer(modifier = Modifier.height(20.dp))
-        FormText(text = "Tipo de perfil: ${myProfile.value.profileType}")
+        FormText(text = stringResource(id = R.string.profile_type) + ": ${myProfile.value.profileType}")
         Spacer(modifier = Modifier.height(20.dp))
-        FormText(text = "Apresentação: ${myProfile.value.presentation}")
+        FormText(text = stringResource(id = R.string.user_presentation) + ": ${myProfile.value.presentation}")
         Spacer(modifier = Modifier.height(20.dp))
         FormText(text = "$interestsText: ${myProfile.value.interestsList}")
 

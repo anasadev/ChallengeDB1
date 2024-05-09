@@ -1,6 +1,5 @@
 package br.com.fiap.findyourmentor.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,19 +9,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormText
-import br.com.fiap.findyourmentor.components.ProfileButton
 import br.com.fiap.findyourmentor.database.repository.UserRepository
-import br.com.fiap.findyourmentor.model.User
 
 @Composable
 fun InterestsScreen(
@@ -41,10 +38,10 @@ fun InterestsScreen(
 
     if(profileType == "aprendiz"){
         route = "profile/aprendiz"
-        interests = "Quero aprender:"
+        interests = stringResource(id = R.string.interests_text_learner)
     } else {
         route = "profile/mentor"
-        interests = "Posso ensinar:"
+        interests = stringResource(id = R.string.interests_text_mentor)
     }
 
     Column(
@@ -80,7 +77,7 @@ fun InterestsScreen(
             navController.navigate("profile/${userId}")
 
          }) {
-            Text("Criar perfil")
+            Text(stringResource(id = R.string.save_profile))
         }
     }
 }

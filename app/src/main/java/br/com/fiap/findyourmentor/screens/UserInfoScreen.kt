@@ -13,8 +13,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormEditableText
 import br.com.fiap.findyourmentor.database.repository.UserRepository
 import br.com.fiap.findyourmentor.model.User
@@ -30,9 +32,9 @@ fun UserInfoScreen(navController: NavController) {
     Column {
         Row {
             FormEditableText(
-                label = "Username",
+                label = stringResource(id = R.string.user_name),
                 value = name,
-                placeHolder = "Nome que será visível para os outros usuários",
+                placeHolder = stringResource(id = R.string.user_name_placeholder),
                 atualizarTexto = {
                     name = it
                 }
@@ -42,9 +44,9 @@ fun UserInfoScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             FormEditableText(
-                label = "Localização",
+                label = stringResource(id = R.string.user_location),
                 value = location,
-                placeHolder = "Cidade onde você mora",
+                placeHolder = stringResource(id = R.string.user_location_placeholder),
                 atualizarTexto = {
                     location = it
                 }
@@ -54,9 +56,9 @@ fun UserInfoScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             FormEditableText(
-                label = "Apresentação",
+                label = stringResource(id = R.string.user_presentation),
                 value = presentation,
-                placeHolder = "Conte um pouco sobre você!",
+                placeHolder = stringResource(id = R.string.user_presentation_placeholder),
                 atualizarTexto = {
                     presentation = it
                 }
@@ -70,7 +72,7 @@ fun UserInfoScreen(navController: NavController) {
             var userId = userRepository.save(user).toString()
             navController.navigate("profileType/${userId}")
         }) {
-            Text("Continuar")
+            Text(stringResource(id = R.string.continue_button))
         }
     }
 }
