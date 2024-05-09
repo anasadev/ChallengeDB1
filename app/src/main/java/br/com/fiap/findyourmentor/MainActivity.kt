@@ -36,17 +36,17 @@ class MainActivity : ComponentActivity() {
                         composable(route = "personalInfos") {
                             UserInfoScreen(navController)
                         }
-                        composable(route = "profileType/{myId}") {
-                            val myId = it.arguments?.getString("myId")
-                            ProfileTypeScreen(navController, myId!!)
+                        composable(route = "profileType/{userId}") {
+                            val userId = it.arguments?.getString("userId")
+                            ProfileTypeScreen(navController, userId!!)
                         }
-                        composable(route = "interests/{myId}") {
-                            val myId = it.arguments?.getString("myId")
-                            InterestsScreen(navController, myId!!)
+                        composable(route = "interests/{userId}") {
+                            val userId = it.arguments?.getString("userId")
+                            InterestsScreen(navController, userId!!)
                         }
-                        composable(route = "profile/{myId}") {
-                            val myId = it.arguments?.getString("myId")
-                            ProfileScreen(navController, myId!!)
+                        composable(route = "profile/{userId}") {
+                            val userId = it.arguments?.getString("userId")
+                            ProfileScreen(navController, userId!!)
                         }
                         composable(route = "home") {
                             HomeProfileScreen()

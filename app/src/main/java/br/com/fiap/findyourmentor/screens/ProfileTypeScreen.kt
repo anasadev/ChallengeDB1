@@ -18,10 +18,10 @@ import br.com.fiap.findyourmentor.database.repository.UserRepository
 import br.com.fiap.findyourmentor.model.User
 
 @Composable
-fun ProfileTypeScreen(navController: NavController, myId: String) {
+fun ProfileTypeScreen(navController: NavController, userId: String) {
     val context = LocalContext.current
     val userRepository = UserRepository(context)
-    var user = userRepository.findUserById(myId.toLong())
+    var user = userRepository.findUserById(userId.toLong())
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -35,7 +35,7 @@ fun ProfileTypeScreen(navController: NavController, myId: String) {
         Button(onClick = {
             user.profileType = "mentor"
             userRepository.update(user)
-            navController.navigate("interests/${myId}")
+            navController.navigate("interests/${userId}")
         }) {
             Text("...mentor")
         }
@@ -47,7 +47,7 @@ fun ProfileTypeScreen(navController: NavController, myId: String) {
         Button(onClick = {
             user.profileType = "aprendiz"
             userRepository.update(user)
-            navController.navigate("interests/${myId}")
+            navController.navigate("interests/${userId}")
         }) {
             Text("...aprendiz")
         }

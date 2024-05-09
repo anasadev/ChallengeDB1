@@ -23,7 +23,7 @@ import br.com.fiap.findyourmentor.model.User
 fun UserInfoScreen(navController: NavController) {
     val context = LocalContext.current
     val userRepository = UserRepository(context)
-    var nome by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var presentation by remember { mutableStateOf("") }
 
@@ -31,10 +31,10 @@ fun UserInfoScreen(navController: NavController) {
         Row {
             FormEditableText(
                 label = "Username",
-                value = nome,
+                value = name,
                 placeHolder = "Nome que será visível para os outros usuários",
                 atualizarTexto = {
-                    nome = it
+                    name = it
                 }
             )
         }
@@ -66,9 +66,9 @@ fun UserInfoScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(onClick = {
-            val user = User(id = 0, name = nome, location = location, presentation = presentation)
-            var myId = userRepository.save(user).toString()
-            navController.navigate("profileType/${myId}")
+            val user = User(id = 0, name = name, location = location, presentation = presentation)
+            var userId = userRepository.save(user).toString()
+            navController.navigate("profileType/${userId}")
         }) {
             Text("Continuar")
         }
