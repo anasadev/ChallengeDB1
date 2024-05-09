@@ -20,7 +20,7 @@ import br.com.fiap.findyourmentor.database.repository.UserRepository
 import br.com.fiap.findyourmentor.model.User
 
 @Composable
-fun UserInfoScreen(navController: NavController,) {
+fun UserInfoScreen(navController: NavController) {
     val context = LocalContext.current
     val userRepository = UserRepository(context)
     var nome by remember { mutableStateOf("") }
@@ -68,7 +68,7 @@ fun UserInfoScreen(navController: NavController,) {
         Button(onClick = {
             val user = User(id = 0, name = nome, location = location, presentation = presentation)
             var myId = userRepository.save(user).toString()
-            navController.navigate("profileType")
+            navController.navigate("profileType/${myId}")
         }) {
             Text("Continuar")
         }

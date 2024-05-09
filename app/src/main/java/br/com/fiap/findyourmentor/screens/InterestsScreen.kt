@@ -27,10 +27,13 @@ import br.com.fiap.findyourmentor.model.User
 @Composable
 fun InterestsScreen(
     navController: NavController,
-    profileType: String
+    myId: String
 ) {
     val context = LocalContext.current
     val userRepository = UserRepository(context)
+    var user = userRepository.findUserById(myId.toLong())
+    var profileType = user.profileType
+
     var route = ""
     var interests = ""
     var interestsList: MutableList<String> = mutableListOf()
@@ -72,8 +75,8 @@ fun InterestsScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(onClick = {
-            val user = User(id = 0, profileType = profileType, interestsList = interestsList.joinToString())
-            var myId = userRepository.save(user).toString()
+            user.interestsList = interestsList.joinToString()
+            userRepository.update(user)
             navController.navigate("profile/${myId}")
 
          }) {
