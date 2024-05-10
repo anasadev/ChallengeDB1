@@ -5,6 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
@@ -36,12 +39,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.fiap.findyourmentor.R
+import br.com.fiap.findyourmentor.database.repository.getAllUsers
 import br.com.fiap.findyourmentor.model.User
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun HomeProfileScreen(
 
@@ -69,8 +75,8 @@ fun HomeProfileScreen(
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 228.dp)
         ) {
-           items(4) { photo ->
-               ProfileItem(null)
+           items(getAllUsers()) {
+               ProfileItem(it)
            }
         }
     }
@@ -82,9 +88,10 @@ private fun HomeProfileScreenPreview(){
     HomeProfileScreen()
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ProfileItem(user: User?){
-    Row {
+private fun ProfileItem(user: User){
+    Column {
         Image(
             painter = painterResource(id = R.drawable.contact),
             contentDescription = null,
@@ -93,9 +100,15 @@ private fun ProfileItem(user: User?){
                 .size(70.dp)
                 .clip(CircleShape)
         )
-
-        Text(text = "Nome")
-        Text(text = "Nome")
+        FlowRow {
+            Text(text = user.name)
+        }
+        FlowRow {
+            Text(text = user.profileType.replaceFirstChar(Char::uppercaseChar))
+        }
+        FlowRow {
+            Text(text = user.interestsList)
+        }
     }
 }
 

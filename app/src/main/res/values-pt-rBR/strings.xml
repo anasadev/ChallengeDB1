@@ -15,6 +15,7 @@
     <string name="continue_button">Continuar</string>
     <string name="interests_text_mentor">Posso ensinar</string>
     <string name="interests_text_learner">Quero aprender</string>
+    <string name="required_checkbox">Escolha pelo menos uma opção</string>
     <string name="learner">aprendiz</string>
     <string name="mentor">mentor</string>
     <string name="save_profile">Salvar perfil</string>

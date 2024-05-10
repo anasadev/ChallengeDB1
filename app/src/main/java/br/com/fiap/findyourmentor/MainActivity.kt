@@ -30,8 +30,8 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        //startDestination = "home"
-                        startDestination = "personalInfos"
+                        startDestination = "home"
+                        //startDestination = "personalInfos"
                     ) {
                         composable(route = "personalInfos") {
                             UserInfoScreen(navController)

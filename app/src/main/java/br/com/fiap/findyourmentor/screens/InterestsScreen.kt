@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -15,9 +16,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormText
@@ -36,7 +40,9 @@ fun InterestsScreen(
     var interests = ""
     var interestsList: MutableList<String> = mutableListOf()
     val optionsList = listOf("Kotlin", "Swift", "Java", "PHP", "CSS", "JavaScript", "TypeScript", "Python", "MySQL")
-
+    var checkboxError by remember {
+        mutableStateOf(false)
+    }
     if(profileType == "aprendiz"){
         interests = stringResource(id = R.string.interests_text_learner)
     } else {
@@ -70,10 +76,25 @@ fun InterestsScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        if(checkboxError){
+            Text(text = stringResource(id = R.string.required_checkbox),
+                fontSize = 14.sp,
+                color = Color.Red,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center)
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+
         Button(onClick = {
-            user.interestsList = interestsList.joinToString()
-            userRepository.update(user)
-            navController.navigate("profile/${userId}")
+            if(interestsList.isNotEmpty()){
+                checkboxError = false
+                user.interestsList = interestsList.joinToString()
+                userRepository.update(user)
+                navController.navigate("profile/${userId}")
+            } else {
+                checkboxError = true
+            }
+
 
          }) {
             Text(stringResource(id = R.string.save_profile))

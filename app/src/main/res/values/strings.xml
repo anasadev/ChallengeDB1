@@ -13,6 +13,7 @@
     <string name="required_presentation">A presentation is required</string>
     <string name="user_presentation_placeholder">Tell us something about you!</string>
     <string name="continue_button">Continue</string>
+    <string name="required_checkbox">Select at least one option</string>
     <string name="interests_text_mentor">I can teach</string>
     <string name="interests_text_learner">I want to learn</string>
     <string name="learner">learner</string>
