@@ -1,18 +1,18 @@
 <resources>
     <string name="app_name">FindYourMentor</string>
-    <string name="user_name">Nome de usuário</string>
-    <string name="name">Nome</string>
-    <string name="profile_type">Tipo de perfil</string>
-    <string name="want_to_be">Quero ser</string>
-    <string name="user_name_placeholder">Nome que será visível para os outros usuários</string>
-    <string name="user_location">Localização</string>
-    <string name="user_location_placeholder">Cidade onde você mora</string>
-    <string name="user_presentation">Apresentação</string>
-    <string name="user_presentation_placeholder">Conte um pouco sobre você!</string>
-    <string name="continue_button">Continuar</string>
-    <string name="interests_text_mentor">Posso ensinar</string>
-    <string name="interests_text_learner">Quero aprender</string>
-    <string name="learner">aprendiz</string>
+    <string name="user_name">Username</string>
+    <string name="name">Name</string>
+    <string name="profile_type">Profile type</string>
+    <string name="want_to_be">I want to be a</string>
+    <string name="user_name_placeholder">Name visible to other users</string>
+    <string name="user_location">Location</string>
+    <string name="user_location_placeholder">City where you live</string>
+    <string name="user_presentation">About you</string>
+    <string name="user_presentation_placeholder">Tell us something about you!</string>
+    <string name="continue_button">Continue</string>
+    <string name="interests_text_mentor">I can teach</string>
+    <string name="interests_text_learner">I want to learn</string>
+    <string name="learner">learner</string>
     <string name="mentor">mentor</string>
-    <string name="save_profile">Salvar perfil</string>
+    <string name="save_profile">Save profile</string>
 </resources>
