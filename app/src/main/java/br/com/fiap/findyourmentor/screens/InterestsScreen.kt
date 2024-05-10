@@ -9,8 +9,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,16 +33,13 @@ fun InterestsScreen(
     var user = userRepository.findUserById(userId.toLong())
     var profileType = user.profileType
 
-    var route = ""
     var interests = ""
     var interestsList: MutableList<String> = mutableListOf()
     val optionsList = listOf("Kotlin", "Swift", "Java", "PHP", "CSS", "JavaScript", "TypeScript", "Python", "MySQL")
 
     if(profileType == "aprendiz"){
-        route = "profile/aprendiz"
         interests = stringResource(id = R.string.interests_text_learner)
     } else {
-        route = "profile/mentor"
         interests = stringResource(id = R.string.interests_text_mentor)
     }
 

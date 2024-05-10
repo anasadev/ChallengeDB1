@@ -2,12 +2,15 @@
     <string name="app_name">FindYourMentor</string>
     <string name="user_name">Username</string>
     <string name="name">Name</string>
+    <string name="required_name">A name is required</string>
     <string name="profile_type">Profile type</string>
     <string name="want_to_be">I want to be a</string>
     <string name="user_name_placeholder">Name visible to other users</string>
     <string name="user_location">Location</string>
+    <string name="required_location">Your location is required</string>
     <string name="user_location_placeholder">City where you live</string>
     <string name="user_presentation">About you</string>
+    <string name="required_presentation">A presentation is required</string>
     <string name="user_presentation_placeholder">Tell us something about you!</string>
     <string name="continue_button">Continue</string>
     <string name="interests_text_mentor">I can teach</string>

@@ -15,7 +15,8 @@ fun FormEditableText(
     label: String,
     value: String,
     placeHolder: String,
-    atualizarTexto: (String) -> Unit
+    atualizarTexto: (String) -> Unit,
+    isError: Boolean
 ) {
     OutlinedTextField(
         value = value,
@@ -26,6 +27,7 @@ fun FormEditableText(
         placeholder = {
             Text(text = placeHolder)
         },
+        isError = isError,
         modifier = Modifier
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
             .fillMaxWidth(),
