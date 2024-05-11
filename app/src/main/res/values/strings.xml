@@ -9,7 +9,7 @@
     <string name="user_location">Location</string>
     <string name="required_location">Your location is required</string>
     <string name="user_location_placeholder">City where you live</string>
-    <string name="user_presentation">About you</string>
+    <string name="user_presentation">About me</string>
     <string name="required_presentation">A presentation is required</string>
     <string name="user_presentation_placeholder">Tell us something about you!</string>
     <string name="continue_button">Continue</string>

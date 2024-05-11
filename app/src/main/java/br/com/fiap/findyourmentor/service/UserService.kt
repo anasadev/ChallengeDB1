@@ -10,6 +10,7 @@ interface UserService {
     @GET("/users")
     fun getUsersList(): Call<List<User>>
 
-    @GET("/users?id={id}")
+    @GET("/users/{id}")
     fun getUserById(@Path("id") id: Long): Call<User>
+
 }
