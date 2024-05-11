@@ -90,11 +90,10 @@ fun InterestsScreen(
                 checkboxError = false
                 user.interestsList = interestsList.joinToString()
                 userRepository.update(user)
-                navController.navigate("profile/${userId}")
+                navController.navigate("home")
             } else {
                 checkboxError = true
             }
-
 
          }) {
             Text(stringResource(id = R.string.save_profile))

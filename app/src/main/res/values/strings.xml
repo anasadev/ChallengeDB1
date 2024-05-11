@@ -20,4 +20,10 @@
     <string name="mentor">mentor</string>
     <string name="save_profile">Save profile</string>
     <string name="view_profile">Go to profile</string>
+    <string name="view_more_profiles">See more profiles</string>
+    <string name="like_profile">Like this profile</string>
+    <string name="unlike_profile">Unlike this profile</string>
+    <string name="send_message">Send a message</string>
+    <string name="match">It\'s a match!</string>
+    <string name="send_match">liked your profile back! How about sending them a message? :)</string>
 </resources>

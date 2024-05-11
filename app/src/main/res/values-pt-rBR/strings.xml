@@ -20,4 +20,10 @@
     <string name="mentor">mentor</string>
     <string name="save_profile">Salvar perfil</string>
     <string name="view_profile">Ver perfil</string>
+    <string name="view_more_profiles">Ver outros perfis</string>
+    <string name="like_profile">Curtir este perfil</string>
+    <string name="unlike_profile">Descurtir este perfil</string>
+    <string name="send_message">Enviar mensagem</string>
+    <string name="match">Deu match! %1$s também curtiu seu perfil! Que tal mandar uma mensagem pra conversar sobre o projeto de estudos? :)</string>
+    <string name="send_match">também curtiu seu perfil! Que tal mandar uma mensagem pra conversar sobre o projeto de estudos? :)</string>
 </resources>

@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.findyourmentor.screens.HomeProfileScreen
 import br.com.fiap.findyourmentor.screens.InterestsScreen
+import br.com.fiap.findyourmentor.screens.MatchScreen
 import br.com.fiap.findyourmentor.screens.ProfileScreen
 import br.com.fiap.findyourmentor.screens.ProfileTypeScreen
 import br.com.fiap.findyourmentor.screens.UserInfoScreen
@@ -50,6 +51,10 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = "home") {
                             HomeProfileScreen(navController)
+                        }
+                        composable(route = "match/{userName}") {
+                            val userName = it.arguments?.getString("userName")
+                            MatchScreen(userName!!)
                         }
                     }
                 }
