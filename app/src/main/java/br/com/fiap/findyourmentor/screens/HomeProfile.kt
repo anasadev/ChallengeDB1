@@ -1,6 +1,7 @@
 package br.com.fiap.findyourmentor.screens
 
 import android.provider.ContactsContract.Profile
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedTextField
@@ -38,20 +40,36 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
-import br.com.fiap.findyourmentor.database.repository.getAllUsers
 import br.com.fiap.findyourmentor.model.User
+import br.com.fiap.findyourmentor.service.RetrofitFactory
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun HomeProfileScreen(
+fun HomeProfileScreen(navController: NavController) {
+    var usersList by remember {mutableStateOf(listOf<User>())}
+    var call = RetrofitFactory().getUserService().getUsersList();
 
-) {
+    call.enqueue(object : Callback<List<User>>{
+        override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
+            //TODO mensagem pro usuário se nenhum usuário encontrado
+            usersList = response.body()!!
+        }
+        override fun onFailure(call: Call<List<User>>, t: Throwable) {
+            Log.i("FIAP", "onResponde: ${t.message}")
+        }
+    })
+
     Column(modifier = Modifier
         .background(Color.Cyan)
         .fillMaxWidth()
@@ -75,22 +93,22 @@ fun HomeProfileScreen(
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 228.dp)
         ) {
-           items(getAllUsers()) {
-               ProfileItem(it)
+           items(usersList) {
+               ProfileItem(navController, it)
            }
         }
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun HomeProfileScreenPreview(){
-    HomeProfileScreen()
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//private fun HomeProfileScreenPreview(){
+//    HomeProfileScreen(navController = navController)
+//}
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ProfileItem(user: User){
+private fun ProfileItem(navController: NavController, user: User){
     Column {
         Image(
             painter = painterResource(id = R.drawable.contact),
@@ -108,6 +126,11 @@ private fun ProfileItem(user: User){
         }
         FlowRow {
             Text(text = user.interestsList)
+        }
+        Button(onClick = {
+                navController.navigate("profile/${user.id}")
+        }) {
+            Text(stringResource(id = R.string.view_profile))
         }
     }
 }

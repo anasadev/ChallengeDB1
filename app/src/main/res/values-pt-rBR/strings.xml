@@ -19,4 +19,5 @@
     <string name="learner">aprendiz</string>
     <string name="mentor">mentor</string>
     <string name="save_profile">Salvar perfil</string>
+    <string name="view_profile">Ver perfil</string>
 </resources>

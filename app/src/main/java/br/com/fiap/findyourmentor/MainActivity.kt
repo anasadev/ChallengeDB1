@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
                             ProfileScreen(navController, userId!!)
                         }
                         composable(route = "home") {
-                            HomeProfileScreen()
+                            HomeProfileScreen(navController)
                         }
                     }
                 }
