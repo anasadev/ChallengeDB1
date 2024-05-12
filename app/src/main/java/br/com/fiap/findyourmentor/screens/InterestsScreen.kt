@@ -90,7 +90,7 @@ fun InterestsScreen(
                 checkboxError = false
                 user.interestsList = interestsList.joinToString()
                 userRepository.update(user)
-                navController.navigate("home")
+                navController.navigate("home/${userId}")
             } else {
                 checkboxError = true
             }

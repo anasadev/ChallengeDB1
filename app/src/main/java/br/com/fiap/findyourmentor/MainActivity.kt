@@ -31,8 +31,8 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = "home"
-                        //startDestination = "personalInfos"
+                        //startDestination = "home"
+                        startDestination = "personalInfos"
                     ) {
                         composable(route = "personalInfos") {
                             UserInfoScreen(navController)
@@ -49,8 +49,9 @@ class MainActivity : ComponentActivity() {
                             val userId = it.arguments?.getString("userId")
                             ProfileScreen(navController, userId!!)
                         }
-                        composable(route = "home") {
-                            HomeProfileScreen(navController)
+                        composable(route = "home/{userId}") {
+                            val userId = it.arguments?.getString("userId")
+                            HomeProfileScreen(navController, userId!!)
                         }
                         composable(route = "match/{userName}") {
                             val userName = it.arguments?.getString("userName")
