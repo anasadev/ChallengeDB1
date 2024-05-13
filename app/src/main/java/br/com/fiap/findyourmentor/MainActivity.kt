@@ -28,9 +28,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
+
                     NavHost(
                         navController = navController,
-                        startDestination = "home"
+                        startDestination = "personalInfos"
                     ) {
                         composable(route = "personalInfos") {
                             UserInfoScreen(navController)

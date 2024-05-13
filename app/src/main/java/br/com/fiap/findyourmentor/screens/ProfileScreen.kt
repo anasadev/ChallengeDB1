@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.components.FormText
+import br.com.fiap.findyourmentor.components.ProfileButton
 import br.com.fiap.findyourmentor.database.repository.UserRepository
 
 @Composable
@@ -40,6 +41,7 @@ fun ProfileScreen(
 
 
         Spacer(modifier = Modifier.height(20.dp))
+        ProfileButton(navController = navController, route = "home", textButton = "...home")
     }
     
 }
