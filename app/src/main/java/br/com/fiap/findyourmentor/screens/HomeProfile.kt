@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -37,13 +35,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.navArgument
 import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.database.repository.UserRepository
 import br.com.fiap.findyourmentor.model.User
@@ -54,13 +50,13 @@ import retrofit2.Response
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun HomeProfileScreen(navController: NavController/*, userId: String*/) {
+fun HomeProfileScreen(navController: NavController, userId: String) {
 
     var usersList by remember {mutableStateOf(listOf<User>())}
-    var call = RetrofitFactory().getUserService().getUsersList();
+    val call = RetrofitFactory().getUserService().getUsersList();
     val context = LocalContext.current
     val userRepository = UserRepository(context)
-    //var connectedUser = userRepository.findUserById(userId.toLong())
+    val connectedUser = userRepository.findUserById(userId.toLong())
 
     call.enqueue(object : Callback<List<User>>{
         override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
@@ -93,7 +89,7 @@ fun HomeProfileScreen(navController: NavController/*, userId: String*/) {
             )
         }
 
-        ProfilesFilter(null, usersList, navController)
+        ProfilesFilter(connectedUser, usersList, navController)
     }
 }
 
@@ -105,7 +101,7 @@ fun HomeProfileScreen(navController: NavController/*, userId: String*/) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ProfileItem(navController: NavController, user: User){
+private fun ProfileItem(navController: NavController, user: User, connectedUserId: String){
     Column(
         modifier = Modifier
     ) {
@@ -162,7 +158,7 @@ private fun ProfileItem(navController: NavController, user: User){
                 Button(
                     modifier = Modifier.padding(8.dp),
                     onClick = {
-                    navController.navigate("profile/${user.id}")
+                    navController.navigate("profile/${user.id}/${connectedUserId}")
                 }) {
                     Text(stringResource(id = R.string.view_profile))
                 }
@@ -192,7 +188,9 @@ private fun ProfilesFilter(connectedUser: User?, usersList: List<User>, navContr
             columns = GridCells.Adaptive(minSize = 228.dp)
         ) {
             items(usersListFiltered) {
-                ProfileItem(navController, it)
+                if (connectedUser != null) {
+                    ProfileItem(navController, it, connectedUser.id.toString())
+                }
             }
         }
 }

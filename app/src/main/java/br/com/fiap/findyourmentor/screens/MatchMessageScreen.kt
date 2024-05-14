@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import br.com.fiap.findyourmentor.R
 
 @Composable
-fun MatchScreen(userName: String) {
+fun MatchMessageScreen(userName: String) {
     Column {
         Row {
             Text(stringResource(id = R.string.match))

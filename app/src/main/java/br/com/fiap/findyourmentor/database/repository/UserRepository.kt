@@ -1,12 +1,12 @@
 package br.com.fiap.findyourmentor.database.repository
 
 import android.content.Context
-import br.com.fiap.findyourmentor.database.dao.UserDb
+import br.com.fiap.findyourmentor.database.dao.FindYourMentorDb
 import br.com.fiap.findyourmentor.model.User
 
 class UserRepository(context: Context) {
 
-    var db = UserDb.getDatabase(context).userDao()
+    var db = FindYourMentorDb.getDatabase(context).userDao()
 
     fun save(user: User): Long {
         return db.save(user = user)

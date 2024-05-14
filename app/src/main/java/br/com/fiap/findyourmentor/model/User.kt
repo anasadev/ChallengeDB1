@@ -12,5 +12,5 @@ data class User(
     @ColumnInfo(name = "profile_type") var profileType: String = "",
     var presentation: String = "",
     @ColumnInfo(name = "interests_list")
-    var interestsList: String = ""
+    var interestsList: String = "",
 )

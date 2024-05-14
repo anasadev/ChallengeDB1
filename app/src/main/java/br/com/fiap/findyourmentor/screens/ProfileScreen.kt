@@ -1,11 +1,14 @@
 package br.com.fiap.findyourmentor.screens
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
@@ -16,13 +19,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormText
-import br.com.fiap.findyourmentor.components.ProfileButton
+import br.com.fiap.findyourmentor.database.repository.MatchRepository
+import br.com.fiap.findyourmentor.database.repository.UserRepository
+import br.com.fiap.findyourmentor.model.Match
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.service.RetrofitFactory
 import retrofit2.Call
@@ -32,15 +41,17 @@ import retrofit2.Response
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    userId: String
+    userId: String,
+    userConnected: String
 ) {
     var call = RetrofitFactory().getUserService().getUserById(userId.toLong())
     var user by remember {
         mutableStateOf(User())
     }
-    var isLiked by remember {
-        mutableStateOf(false)
-    }
+    val context = LocalContext.current
+    val matchRepository = MatchRepository(context)
+
+
     call.enqueue(object : Callback<User> {
         override fun onResponse(call: Call<User>, response: Response<User>) {
             user = response.body()!!
@@ -59,6 +70,14 @@ fun ProfileScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
+        Image(
+            painter = painterResource(id = R.drawable.contact),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(70.dp)
+                .clip(CircleShape)
+        )
         FormText(text = stringResource(id = R.string.name) + ": ${user.name}")
         Spacer(modifier = Modifier.height(20.dp))
         FormText(text = stringResource(id = R.string.user_location) + ": ${user.location}")
@@ -69,26 +88,26 @@ fun ProfileScreen(
         Spacer(modifier = Modifier.height(20.dp))
         FormText(text = "$interestsText: ${user.interestsList}")
         Spacer(modifier = Modifier.height(20.dp))
-        Button(onClick = { navController.navigate("home")}) {
-            Text(stringResource(id = R.string.view_more_profiles))
-        }
         Row(verticalAlignment = Alignment.CenterVertically){
-            Checkbox(
-                checked = isLiked,
-                onCheckedChange = { isLiked = it },
-                modifier = Modifier
-            )
-            if(isLiked){
-                Text(text = "Unlike this profile")
-            } else {
-                Text(text = "Like this profile")
+            Button(onClick = {
+                val match = Match(id = 0, activeUserId = userConnected.toLong(), likedUserId = userId.toLong(), isLiked = false)
+                matchRepository.save(match)
+                navController.navigate("home/${userConnected}")
+            }) {
+                Text(stringResource(id = R.string.unlike_profile))
             }
         }
-        if(isLiked){
-            navController.navigate("match/${user.name}")
-            isLiked = false
+        Row(verticalAlignment = Alignment.CenterVertically){
+            Button(onClick = {
+                val match = Match(id = 0, activeUserId = userConnected.toLong(), likedUserId = userId.toLong(), isLiked = true)
+                matchRepository.save(match)
+                navController.navigate("match/${user.name}")
+            }) {
+                Text(stringResource(id = R.string.like_profile))
+            }
         }
     }
+
 
 }
 
