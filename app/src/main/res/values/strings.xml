@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">FindYourMentor</string>
+    <string name="user_name">Username</string>
+    <string name="name">Name</string>
+    <string name="required_name">A name is required</string>
+    <string name="profile_type">Profile type</string>
+    <string name="want_to_be">I want to be a</string>
+    <string name="user_name_placeholder">Name visible to other users</string>
+    <string name="user_location">Location</string>
+    <string name="required_location">Your location is required</string>
+    <string name="user_location_placeholder">City where you live</string>
+    <string name="user_presentation">About me</string>
+    <string name="required_presentation">A presentation is required</string>
+    <string name="user_presentation_placeholder">Tell us something about you!</string>
+    <string name="continue_button">Continue</string>
+    <string name="required_checkbox">Select at least one option</string>
+    <string name="interests_text_mentor">I can teach</string>
+    <string name="interests_text_learner">I want to learn</string>
+    <string name="learner">learner</string>
+    <string name="mentor">mentor</string>
+    <string name="save_profile">Save profile</string>
+    <string name="view_profile">Go to profile</string>
+    <string name="view_more_profiles">See more profiles</string>
+    <string name="like_profile">Like this profile</string>
+    <string name="unlike_profile">Unlike this profile</string>
+    <string name="send_message">Send a message</string>
+    <string name="match">It\'s a match!</string>
+    <string name="send_match">liked your profile back! How about sending them a message? :)</string>
 </resources>

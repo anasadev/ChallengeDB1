@@ -1,10 +1,10 @@
 package br.com.fiap.findyourmentor.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -16,32 +16,37 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormText
-import br.com.fiap.findyourmentor.components.ProfileButton
 import br.com.fiap.findyourmentor.database.repository.UserRepository
-import br.com.fiap.findyourmentor.model.User
 
 @Composable
 fun InterestsScreen(
     navController: NavController,
-    profileType: String
+    userId: String
 ) {
     val context = LocalContext.current
     val userRepository = UserRepository(context)
-    var route = ""
+    var user = userRepository.findUserById(userId.toLong())
+    var profileType = user.profileType
+
     var interests = ""
     var interestsList: MutableList<String> = mutableListOf()
     val optionsList = listOf("Kotlin", "Swift", "Java", "PHP", "CSS", "JavaScript", "TypeScript", "Python", "MySQL")
-
+    var checkboxError by remember {
+        mutableStateOf(false)
+    }
     if(profileType == "aprendiz"){
-        route = "profile/aprendiz"
-        interests = "Quero aprender:"
+        interests = stringResource(id = R.string.interests_text_learner)
     } else {
-        route = "profile/mentor"
-        interests = "Posso ensinar:"
+        interests = stringResource(id = R.string.interests_text_mentor)
     }
 
     Column(
@@ -71,13 +76,27 @@ fun InterestsScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        if(checkboxError){
+            Text(text = stringResource(id = R.string.required_checkbox),
+                fontSize = 14.sp,
+                color = Color.Red,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center)
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+
         Button(onClick = {
-            val user = User(id = 0, profileType = profileType, interestsList = interestsList.joinToString())
-            var myId = userRepository.save(user).toString()
-            navController.navigate("profile/${myId}")
+            if(interestsList.isNotEmpty()){
+                checkboxError = false
+                user.interestsList = interestsList.joinToString()
+                userRepository.update(user)
+                navController.navigate("home/${userId}")
+            } else {
+                checkboxError = true
+            }
 
          }) {
-            Text("Criar perfil")
+            Text(stringResource(id = R.string.save_profile))
         }
     }
 }

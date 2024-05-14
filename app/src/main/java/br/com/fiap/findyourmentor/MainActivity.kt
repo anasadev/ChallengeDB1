@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.findyourmentor.screens.HomeProfileScreen
 import br.com.fiap.findyourmentor.screens.InterestsScreen
+import br.com.fiap.findyourmentor.screens.MatchScreen
 import br.com.fiap.findyourmentor.screens.ProfileScreen
 import br.com.fiap.findyourmentor.screens.ProfileTypeScreen
 import br.com.fiap.findyourmentor.screens.UserInfoScreen
@@ -31,24 +32,31 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
+                        //startDestination = "home"
                         startDestination = "personalInfos"
                     ) {
                         composable(route = "personalInfos") {
                             UserInfoScreen(navController)
                         }
-                        composable(route = "profileType") {
-                            ProfileTypeScreen(navController)
+                        composable(route = "profileType/{userId}") {
+                            val userId = it.arguments?.getString("userId")
+                            ProfileTypeScreen(navController, userId!!)
                         }
-                        composable(route = "interests/{profileType}") {
-                            val profileType = it.arguments?.getString("profileType")
-                            InterestsScreen(navController, profileType!!)
+                        composable(route = "interests/{userId}") {
+                            val userId = it.arguments?.getString("userId")
+                            InterestsScreen(navController, userId!!)
                         }
-                        composable(route = "profile/{myId}") {
-                            val myId = it.arguments?.getString("myId")
-                            ProfileScreen(navController, myId!!)
+                        composable(route = "profile/{userId}") {
+                            val userId = it.arguments?.getString("userId")
+                            ProfileScreen(navController, userId!!)
                         }
-                        composable(route = "home") {
-                            HomeProfileScreen()
+                        composable(route = "home/{userId}") {
+                            val userId = it.arguments?.getString("userId")
+                            HomeProfileScreen(navController, userId!!)
+                        }
+                        composable(route = "match/{userName}") {
+                            val userName = it.arguments?.getString("userName")
+                            MatchScreen(userName!!)
                         }
                     }
                 }
