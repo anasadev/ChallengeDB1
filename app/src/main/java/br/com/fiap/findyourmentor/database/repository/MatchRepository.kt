@@ -17,10 +17,10 @@ class MatchRepository(context: Context) {
     fun delete(match: Match): Int {
         return db.delete(match = match)
     }
-    fun findUserById(id: Long): List<Match> {
-        return db.findByActiveUserId(id = id)
-    }
-    fun findUsers(id: Long): List<Match> {
-        return db.findLikes(id = id)
-    }
+//    fun findByActiveUserId(id: Long): List<Match> {
+//        return db.findByActiveUserId(id = id)
+//    }
+//    fun findLikes(id: Long): List<Match> {
+//        return db.findLikes(id = id)
+//    }
 }

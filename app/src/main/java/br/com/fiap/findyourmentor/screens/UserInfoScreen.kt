@@ -1,5 +1,6 @@
 package br.com.fiap.findyourmentor.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,16 +20,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormEditableText
 import br.com.fiap.findyourmentor.database.repository.UserRepository
 import br.com.fiap.findyourmentor.model.User
+import br.com.fiap.findyourmentor.service.RetrofitFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun UserInfoScreen(navController: NavController) {
     val context = LocalContext.current
-    val userRepository = UserRepository(context)
     var name by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var presentation by remember { mutableStateOf("") }
@@ -55,7 +64,7 @@ fun UserInfoScreen(navController: NavController) {
                 isError = nameError
             )
         }
-        if(nameError){
+        if (nameError) {
             Text(
                 text = stringResource(id = R.string.required_name),
                 fontSize = 14.sp,
@@ -77,12 +86,14 @@ fun UserInfoScreen(navController: NavController) {
                 isError = locationError
             )
         }
-        if(locationError){
-            Text(text = stringResource(id = R.string.required_location),
+        if (locationError) {
+            Text(
+                text = stringResource(id = R.string.required_location),
                 fontSize = 14.sp,
                 color = Color.Red,
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.End)
+                textAlign = TextAlign.End
+            )
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -92,33 +103,57 @@ fun UserInfoScreen(navController: NavController) {
                 value = presentation,
                 placeHolder = stringResource(id = R.string.user_presentation_placeholder),
                 atualizarTexto = {
-                    if(it.length <= presentationMaxSize) presentation = it
+                    if (it.length <= presentationMaxSize) presentation = it
                 },
                 isError = presentationError
             )
         }
-        if(presentationError){
-            Text(text = stringResource(id = R.string.required_presentation),
+        if (presentationError) {
+            Text(
+                text = stringResource(id = R.string.required_presentation),
                 fontSize = 14.sp,
                 color = Color.Red,
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.End)
+                textAlign = TextAlign.End
+            )
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(onClick = {
-            if(name.isEmpty()) nameError = true else nameError = false
-            if(location.isEmpty()) locationError = true else locationError = false
-            if(presentation.isEmpty()) presentationError = true else presentationError = false
+            if (name.isEmpty()) nameError = true else nameError = false
+            if (location.isEmpty()) locationError = true else locationError = false
+            if (presentation.isEmpty()) presentationError = true else presentationError = false
 
-            if(!nameError && !locationError && !presentationError){
-                val user = User(id = 0, name = name, location = location, presentation = presentation)
-                var userId = userRepository.save(user).toString()
-                navController.navigate("profileType/${userId}")
+            if (!nameError && !locationError && !presentationError) {
+                val user =
+                    User(id = 0, name = name, location = location, presentation = presentation)
+                CoroutineScope(Dispatchers.Main).launch {
+
+                    withContext(Dispatchers.IO) {
+                        val call = RetrofitFactory().getUserService().pushUser(user)
+
+                        call.enqueue(object : Callback<User> {
+                            override fun onResponse(
+                                call: Call<User>,
+                                response: Response<User>,
+                            ) {
+                                val result = response.body()!!
+                                navController.navigate("profileType/${result.id}")
+                            }
+
+                            override fun onFailure(call: Call<User>, t: Throwable) {
+
+                                Log.i("FIAP", t.stackTrace.toString())
+                            }
+                        })
+                    }
+                }
+
             }
-        }) {
-            Text(stringResource(id = R.string.continue_button))
+
+        }){
+            Text(text = stringResource(id = R.string.continue_button))
         }
     }
 }

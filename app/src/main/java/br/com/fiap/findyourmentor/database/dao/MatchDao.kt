@@ -16,8 +16,8 @@ interface MatchDao {
     fun update(match: Match): Int
     @Delete
     fun delete(match: Match): Int
-    @Query("SELECT * FROM tb_match WHERE active_user_id = :id")
-    fun findByActiveUserId(id: Long): List<Match>
-    @Query("SELECT * FROM tb_match WHERE liked_user_id = :id")
-    fun findLikes(id: Long): List<Match>
+//    @Query("SELECT * FROM tb_match WHERE active_user_id = :id")
+//    fun findByActiveUserId(id: Long): List<Match>
+//    @Query("SELECT liked_user_id FROM tb_match WHERE active_user_id = :id")
+//    fun findLikes(id: Long): List<Match>
 }

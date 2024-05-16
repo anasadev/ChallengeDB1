@@ -1,5 +1,6 @@
 package br.com.fiap.findyourmentor.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,15 +27,37 @@ import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormText
 import br.com.fiap.findyourmentor.database.repository.UserRepository
+import br.com.fiap.findyourmentor.model.User
+import br.com.fiap.findyourmentor.service.RetrofitFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun InterestsScreen(
     navController: NavController,
     userId: String
 ) {
-    val context = LocalContext.current
-    val userRepository = UserRepository(context)
-    var user = userRepository.findUserById(userId.toLong())
+    var callUser = RetrofitFactory().getUserService().getUserById(userId.toLong())
+
+    var user by remember {
+        mutableStateOf(User())
+    }
+
+    callUser.enqueue(object : Callback<User> {
+        override fun onResponse(call: Call<User>, response: Response<User>) {
+            user = response.body()!!
+        }
+
+        override fun onFailure(call: Call<User>, t: Throwable) {
+            Log.i("FIAP", "onResponde: ${t.message}")
+        }
+    })
+
     var profileType = user.profileType
 
     var interests = ""
@@ -89,8 +112,27 @@ fun InterestsScreen(
             if(interestsList.isNotEmpty()){
                 checkboxError = false
                 user.interestsList = interestsList.joinToString()
-                userRepository.update(user)
-                navController.navigate("home/${userId}")
+                CoroutineScope(Dispatchers.Main).launch {
+
+                    withContext(Dispatchers.IO) {
+                        val call = RetrofitFactory().getUserService().updateUser(userId.toLong(), user)
+
+                        call.enqueue(object : Callback<User> {
+                            override fun onResponse(
+                                call: Call<User>,
+                                response: Response<User>,
+                            ) {
+                                val result = response.body()!!
+                                navController.navigate("home/${result.id}")
+                            }
+
+                            override fun onFailure(call: Call<User>, t: Throwable) {
+
+                                Log.i("FIAP", t.stackTrace.toString())
+                            }
+                        })
+                    }
+                }
             } else {
                 checkboxError = true
             }

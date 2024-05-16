@@ -24,6 +24,6 @@
     <string name="like_profile">Curtir este perfil</string>
     <string name="unlike_profile">Este perfil não me interessa</string>
     <string name="send_message">Enviar mensagem</string>
-    <string name="match">Deu match! %1$s também curtiu seu perfil! Que tal mandar uma mensagem pra conversar sobre o projeto de estudos? :)</string>
+    <string name="match">Deu match!</string>
     <string name="send_match">também curtiu seu perfil! Que tal mandar uma mensagem pra conversar sobre o projeto de estudos? :)</string>
 </resources>

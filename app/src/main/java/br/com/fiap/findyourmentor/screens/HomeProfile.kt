@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,13 +19,20 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,22 +49,35 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
-import br.com.fiap.findyourmentor.database.repository.UserRepository
+import br.com.fiap.findyourmentor.database.repository.MatchRepository
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.service.RetrofitFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun HomeProfileScreen(navController: NavController, userId: String) {
 
     var usersList by remember {mutableStateOf(listOf<User>())}
     val call = RetrofitFactory().getUserService().getUsersList();
-    val context = LocalContext.current
-    val userRepository = UserRepository(context)
-    val connectedUser = userRepository.findUserById(userId.toLong())
+    var callUser = RetrofitFactory().getUserService().getUserById(userId.toLong())
+
+    var connectedUser by remember {
+        mutableStateOf(User())
+    }
+
+    callUser.enqueue(object : Callback<User> {
+        override fun onResponse(call: Call<User>, response: Response<User>) {
+            connectedUser = response.body()!!
+        }
+
+        override fun onFailure(call: Call<User>, t: Throwable) {
+            Log.i("FIAP", "onResponde: ${t.message}")
+        }
+    })
+
 
     call.enqueue(object : Callback<List<User>>{
         override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
@@ -68,29 +89,61 @@ fun HomeProfileScreen(navController: NavController, userId: String) {
         }
     })
 
-    Column(modifier = Modifier
-        .background(Color.White)
-        .fillMaxWidth()
-        .fillMaxHeight()
-        .padding(top = 8.dp, bottom = 36.dp, start = 8.dp, end = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-
-    ){
-        var text by remember{ mutableStateOf("") }
-        Row(
-            modifier = Modifier.padding(bottom = 36.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            OutlinedTextField(
-                value = text,
-                onValueChange = { text = it },
-                label = { Text("Procurar matches") }
+    Scaffold(modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "Usuários")
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary
+                ),
+                actions = {
+                    IconButton(onClick = { navController.navigate("profile/${connectedUser.id}/${connectedUser.id}") }) {
+                        Icon(
+                            imageVector = Icons.Filled.Person,
+                            contentDescription = "Perfil",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(onClick = { navController.navigate("myMatches/${connectedUser.id}") }) {
+                        Icon(
+                            imageVector = Icons.Filled.MailOutline,
+                            contentDescription = "Meus matches",
+                            tint = Color.White
+                        )
+                    }
+                }
             )
+        }) { values ->
+        Column(modifier = Modifier
+            .background(Color.White)
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(values),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+
+        ){
+            var text by remember{ mutableStateOf("") }
+            Row(
+                modifier = Modifier.padding(bottom = 36.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    label = { Text("Procurar matches") }
+                )
+            }
+
+            ProfilesFilter(connectedUser, usersList, navController)
         }
 
-        ProfilesFilter(connectedUser, usersList, navController)
     }
+
+
 }
 
 //@Preview(showBackground = true, showSystemUi = true)
@@ -112,7 +165,9 @@ private fun ProfileItem(navController: NavController, user: User, connectedUserI
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
             ),
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -171,7 +226,6 @@ private fun ProfileItem(navController: NavController, user: User, connectedUserI
 @Composable
 private fun ProfilesFilter(connectedUser: User?, usersList: List<User>, navController: NavController){
 
-    //var usersListFiltered by remember {mutableStateOf(listOf<User>())}
     var usersListFiltered by remember {mutableStateOf(usersList)}
 
     if(connectedUser?.profileType == "mentor"){
@@ -194,4 +248,5 @@ private fun ProfilesFilter(connectedUser: User?, usersList: List<User>, navContr
             }
         }
 }
+
 
