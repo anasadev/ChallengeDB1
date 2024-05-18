@@ -12,7 +12,6 @@ import br.com.fiap.findyourmentor.model.User
     version = 1
 )
 abstract class FindYourMentorDb: RoomDatabase() {
-    abstract fun userDao(): UserDao
     abstract fun matchDao(): MatchDao
 
     companion object {

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
@@ -18,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormText
-import br.com.fiap.findyourmentor.database.repository.UserRepository
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.service.RetrofitFactory
 import kotlinx.coroutines.CoroutineScope
@@ -81,13 +80,13 @@ fun InterestsScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         optionsList.forEach { item ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start, modifier = Modifier.width(300.dp)) {
                 val isChecked = remember { mutableStateOf(false) }
 
                 Checkbox(
                     checked = isChecked.value,
                     onCheckedChange = { isChecked.value = it },
-                    enabled = true,
+                    enabled = true
                 )
                 Text(text = item)
                 if(isChecked.value){
@@ -142,9 +141,3 @@ fun InterestsScreen(
         }
     }
 }
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//private fun LearningScreenPreview() {
-//    LearningScreen()
-//}
