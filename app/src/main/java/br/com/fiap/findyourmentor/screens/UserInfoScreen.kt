@@ -2,10 +2,12 @@ package br.com.fiap.findyourmentor.screens
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,18 +15,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormEditableText
-import br.com.fiap.findyourmentor.database.repository.UserRepository
+import br.com.fiap.findyourmentor.components.TextError
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.service.RetrofitFactory
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +34,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun UserInfoScreen(navController: NavController) {
     val context = LocalContext.current
@@ -65,13 +65,7 @@ fun UserInfoScreen(navController: NavController) {
             )
         }
         if (nameError) {
-            Text(
-                text = stringResource(id = R.string.required_name),
-                fontSize = 14.sp,
-                color = Color.Red,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.End
-            )
+            TextError(text = stringResource(id = R.string.required_name))
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -87,13 +81,7 @@ fun UserInfoScreen(navController: NavController) {
             )
         }
         if (locationError) {
-            Text(
-                text = stringResource(id = R.string.required_location),
-                fontSize = 14.sp,
-                color = Color.Red,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.End
-            )
+            TextError(text = stringResource(id = R.string.required_location))
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -109,51 +97,48 @@ fun UserInfoScreen(navController: NavController) {
             )
         }
         if (presentationError) {
-            Text(
-                text = stringResource(id = R.string.required_presentation),
-                fontSize = 14.sp,
-                color = Color.Red,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.End
-            )
+            TextError(text = stringResource(id = R.string.required_presentation))
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Button(onClick = {
-            if (name.isEmpty()) nameError = true else nameError = false
-            if (location.isEmpty()) locationError = true else locationError = false
-            if (presentation.isEmpty()) presentationError = true else presentationError = false
+        FlowRow (modifier = Modifier
+            .padding(top = 20.dp)
+            .align(Alignment.CenterHorizontally)){
+            Button(onClick = {
+                if (name.isEmpty()) nameError = true else nameError = false
+                if (location.isEmpty()) locationError = true else locationError = false
+                if (presentation.isEmpty()) presentationError = true else presentationError = false
 
-            if (!nameError && !locationError && !presentationError) {
-                val user =
-                    User(id = 0, name = name, location = location, presentation = presentation)
-                CoroutineScope(Dispatchers.Main).launch {
+                if (!nameError && !locationError && !presentationError) {
+                    val user =
+                        User(id = 0, name = name, location = location, presentation = presentation)
+                    CoroutineScope(Dispatchers.Main).launch {
 
-                    withContext(Dispatchers.IO) {
-                        val call = RetrofitFactory().getUserService().pushUser(user)
+                        withContext(Dispatchers.IO) {
+                            val call = RetrofitFactory().getUserService().pushUser(user)
 
-                        call.enqueue(object : Callback<User> {
-                            override fun onResponse(
-                                call: Call<User>,
-                                response: Response<User>,
-                            ) {
-                                val result = response.body()!!
-                                navController.navigate("profileType/${result.id}")
-                            }
+                            call.enqueue(object : Callback<User> {
+                                override fun onResponse(
+                                    call: Call<User>,
+                                    response: Response<User>,
+                                ) {
+                                    val result = response.body()!!
+                                    navController.navigate("profileType/${result.id}")
+                                }
 
-                            override fun onFailure(call: Call<User>, t: Throwable) {
+                                override fun onFailure(call: Call<User>, t: Throwable) {
 
-                                Log.i("FIAP", t.stackTrace.toString())
-                            }
-                        })
+                                    Log.i("FIAP", t.stackTrace.toString())
+                                }
+                            })
+                        }
                     }
                 }
-
+            }) {
+                Text(text = stringResource(id = R.string.continue_button))
             }
-
-        }){
-            Text(text = stringResource(id = R.string.continue_button))
         }
+
     }
 }

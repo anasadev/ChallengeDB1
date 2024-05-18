@@ -5,7 +5,7 @@
     <string name="required_name">O nome é obrigatório</string>
     <string name="profile_type">Tipo de perfil</string>
     <string name="want_to_be">Quero ser</string>
-    <string name="user_name_placeholder">Nome que será visível para os outros usuários</string>
+    <string name="user_name_placeholder">Nome visível para os outros usuários</string>
     <string name="user_location">Localização</string>
     <string name="required_location">Sua localização é obrigatória</string>
     <string name="user_location_placeholder">Cidade onde você mora</string>
