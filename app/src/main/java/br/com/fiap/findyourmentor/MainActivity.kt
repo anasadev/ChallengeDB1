@@ -21,7 +21,9 @@ import br.com.fiap.findyourmentor.screens.ProfileScreen
 import br.com.fiap.findyourmentor.screens.ProfileTypeScreen
 import br.com.fiap.findyourmentor.screens.UserInfoScreen
 import br.com.fiap.findyourmentor.ui.theme.FindYourMentorTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
