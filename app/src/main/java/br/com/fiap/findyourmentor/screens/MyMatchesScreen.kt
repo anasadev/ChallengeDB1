@@ -99,11 +99,17 @@ fun MyMatchesScreen(navController: NavController, userConnected: String) {
             verticalArrangement = Arrangement.Top
 
         ) {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 228.dp)
-            ) {
-                items(usersListFiltered) {
-                    ProfileItem(it)
+            if(usersListFiltered.isNotEmpty()){
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 228.dp)
+                ) {
+                    items(usersListFiltered) {
+                        ProfileItem(it)
+                    }
+                }
+            } else {
+                Row {
+                    Text(text = "Você ainda não tem nenhum match :(")
                 }
             }
         }

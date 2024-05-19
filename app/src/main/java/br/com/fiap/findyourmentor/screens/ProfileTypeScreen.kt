@@ -114,9 +114,3 @@ fun ProfileTypeScreen(navController: NavController, userId: String) {
         }
     }
 }
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//private fun ProfileTypeScreenPreview() {
-//    ProfileTypeScreen()
-//}
