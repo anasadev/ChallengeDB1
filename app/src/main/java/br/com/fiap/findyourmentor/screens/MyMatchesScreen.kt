@@ -52,7 +52,9 @@ fun MyMatchesScreen(navController: NavController, userConnected: String) {
 
     callMatch.enqueue(object : Callback<List<Match>> {
         override fun onResponse(call: Call<List<Match>>, response: Response<List<Match>>) {
-            matchesList = response.body()!!
+            if(response.body() != null){
+                matchesList = response.body()!!
+            }
         }
 
         override fun onFailure(call: Call<List<Match>>, t: Throwable) {
@@ -60,16 +62,8 @@ fun MyMatchesScreen(navController: NavController, userConnected: String) {
         }
     })
 
-    var likedUsersId: MutableList<Long> = mutableListOf()
-    for (element in matchesList) {
-        likedUsersId.add(element.likedUserId)
-    }
-
     var usersList by remember { mutableStateOf(listOf<User>()) }
-    var usersListFiltered by remember { mutableStateOf(listOf<User>()) }
-
     var call = RetrofitFactory().getUserService().getUsersList();
-
     call.enqueue(object : Callback<List<User>> {
         override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
             //TODO mensagem pro usuário se nenhum usuário encontrado
@@ -80,7 +74,16 @@ fun MyMatchesScreen(navController: NavController, userConnected: String) {
             Log.i("FIAP", "onResponde: ${t.message}")
         }
     })
-    usersListFiltered = usersList.filter { it.id in likedUsersId }
+
+    var likedUsersId: MutableList<Long> = mutableListOf()
+    var usersListFiltered by remember { mutableStateOf(listOf<User>()) }
+    if(matchesList.isNotEmpty()){
+        for (element in matchesList) {
+            likedUsersId.add(element.likedUserId)
+        }
+        usersListFiltered = usersList.filter { it.id in likedUsersId }
+    }
+
 
 
     Scaffold(modifier = Modifier.fillMaxSize(),

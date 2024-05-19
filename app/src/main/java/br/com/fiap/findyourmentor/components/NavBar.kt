@@ -34,7 +34,7 @@ fun NavBar(navController: NavController, userConnected: String, screenName: Stri
                     tint = Color.White
                 )
             }
-            IconButton(onClick = { navController.navigate("myMatches/${userConnected}") }) {
+            IconButton(onClick = { navController.navigate("myMatches/${userConnected}")}) {
                 Icon(
                     imageVector = Icons.Filled.MailOutline,
                     contentDescription = "Meus matches",
