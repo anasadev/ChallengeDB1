@@ -34,14 +34,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormText
-import br.com.fiap.findyourmentor.database.repository.MatchRepository
 import br.com.fiap.findyourmentor.model.Match
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.service.RetrofitFactory
@@ -64,8 +62,6 @@ fun ProfileScreen(
     var user by remember {
         mutableStateOf(User())
     }
-    val context = LocalContext.current
-    val matchRepository = MatchRepository(context)
 
     call.enqueue(object : Callback<User> {
         override fun onResponse(call: Call<User>, response: Response<User>) {
@@ -172,7 +168,7 @@ fun ProfileScreen(
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (userId != userConnected) {
-                    Dialog(userConnected, userId, userName, matchRepository, navController)
+                    Dialog(userConnected, userId, userName, navController)
                 }
             }
         }
@@ -185,7 +181,6 @@ fun Dialog(
     userConnected: String,
     userId: String,
     userName: String,
-    matchRepository: MatchRepository,
     navController: NavController
 ) {
     Column {
