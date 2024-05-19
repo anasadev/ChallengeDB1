@@ -22,25 +22,25 @@ import androidx.compose.ui.unit.dp
 fun dropDownMenu(list: List<String>, option: String, textLabel: String): String {
     var expanded by remember {
         mutableStateOf(false)
-
     }
 
-//    val list = listOf("Presencial", "Online")
     var selectedOption by remember {
         mutableStateOf(list[0])
     }
-    Row{
+    Row(modifier = Modifier
+        .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        .fillMaxWidth()){
         Text(text = textLabel)
     }
     Row(modifier = Modifier
         .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-        .fillMaxWidth(),) {
+        .fillMaxWidth()) {
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
         ) {
             TextField(
-                modifier = Modifier.menuAnchor(),
+                modifier = Modifier.menuAnchor().fillMaxWidth(),
                 value = option,
                 onValueChange = {},
                 readOnly = true,

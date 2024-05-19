@@ -47,13 +47,11 @@ fun UserInfoScreen(navController: NavController) {
     }
     val listExperienceYears = listOf(
         "Iniciante - nunca trabalhei na área",
-        "1 ano de experiência",
-        "2 anos de experiência",
-        "3 anos de experiência",
-        "4 anos de experiência",
-        "5 anos de experiência",
-        "Mais de 5 anos de experiência",
-        "Mais de 10 anos de experiência"
+        "1-2 ano(s)",
+        "2-3 anos",
+        "4-5 anos",
+        "Mais de 5",
+        "Mais de 10"
     )
     var experienceYears by remember {
         mutableStateOf(listExperienceYears[0])
@@ -83,7 +81,6 @@ fun UserInfoScreen(navController: NavController) {
         if (nameError) {
             TextError(text = stringResource(id = R.string.required_name))
         }
-
         Spacer(modifier = Modifier.height(20.dp))
         Row {
             FormEditableText(
