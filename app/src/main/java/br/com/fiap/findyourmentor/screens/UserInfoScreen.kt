@@ -17,13 +17,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormEditableText
 import br.com.fiap.findyourmentor.components.TextError
+import br.com.fiap.findyourmentor.components.dropDownMenu
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.service.RetrofitFactory
 import kotlinx.coroutines.CoroutineScope
@@ -37,11 +37,27 @@ import retrofit2.Response
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun UserInfoScreen(navController: NavController) {
-    val context = LocalContext.current
     var name by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var presentation by remember { mutableStateOf("") }
     val presentationMaxSize = 400
+    val listAvailability = listOf("Presencial", "Online", "Online e presencial")
+    var availability by remember {
+        mutableStateOf(listAvailability[0])
+    }
+    val listExperienceYears = listOf(
+        "Iniciante - nunca trabalhei na área",
+        "1 ano de experiência",
+        "2 anos de experiência",
+        "3 anos de experiência",
+        "4 anos de experiência",
+        "5 anos de experiência",
+        "Mais de 5 anos de experiência",
+        "Mais de 10 anos de experiência"
+    )
+    var experienceYears by remember {
+        mutableStateOf(listExperienceYears[0])
+    }
     var nameError by remember {
         mutableStateOf(false)
     }
@@ -85,6 +101,7 @@ fun UserInfoScreen(navController: NavController) {
         }
 
         Spacer(modifier = Modifier.height(20.dp))
+
         Row {
             FormEditableText(
                 label = stringResource(id = R.string.user_presentation),
@@ -99,12 +116,23 @@ fun UserInfoScreen(navController: NavController) {
         if (presentationError) {
             TextError(text = stringResource(id = R.string.required_presentation))
         }
-
         Spacer(modifier = Modifier.height(20.dp))
 
-        FlowRow (modifier = Modifier
-            .padding(top = 20.dp)
-            .align(Alignment.CenterHorizontally)){
+        availability = dropDownMenu(listAvailability, availability, "Disponibilidade")
+        Spacer(modifier = Modifier.height(20.dp))
+
+        experienceYears = dropDownMenu(
+            listExperienceYears,
+            experienceYears,
+            "Anos de experiência na área de tecnologia"
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        FlowRow(
+            modifier = Modifier
+                .padding(top = 20.dp)
+                .align(Alignment.CenterHorizontally)
+        ) {
             Button(onClick = {
                 if (name.isEmpty()) nameError = true else nameError = false
                 if (location.isEmpty()) locationError = true else locationError = false
@@ -112,7 +140,14 @@ fun UserInfoScreen(navController: NavController) {
 
                 if (!nameError && !locationError && !presentationError) {
                     val user =
-                        User(id = 0, name = name, location = location, presentation = presentation)
+                        User(
+                            id = 0,
+                            name = name,
+                            location = location,
+                            presentation = presentation,
+                            availability = availability,
+                            experience = experienceYears
+                        )
                     CoroutineScope(Dispatchers.Main).launch {
 
                         withContext(Dispatchers.IO) {
@@ -139,6 +174,7 @@ fun UserInfoScreen(navController: NavController) {
                 Text(text = stringResource(id = R.string.continue_button))
             }
         }
-
     }
 }
+
+

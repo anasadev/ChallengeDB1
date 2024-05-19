@@ -10,6 +10,8 @@ data class UsersResponse(
     var profileType: String,
     val presentation: String,
     val interestsList: String,
+    val availability: String,
+    val experience: String = ""
 )
 
 fun UsersResponse.toModel() = User(
@@ -18,5 +20,7 @@ fun UsersResponse.toModel() = User(
     location = this.location,
     profileType= this.profileType,
     presentation = this.presentation,
-    interestsList = this.interestsList
+    interestsList = this.interestsList,
+    availability = this.availability,
+    experience = this.experience
 )

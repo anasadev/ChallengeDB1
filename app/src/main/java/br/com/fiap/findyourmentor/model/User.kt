@@ -13,4 +13,6 @@ data class User(
     var presentation: String = "",
     @ColumnInfo(name = "interests_list")
     var interestsList: String = "",
+    var availability: String = "",
+    var experience: String = ""
 )
