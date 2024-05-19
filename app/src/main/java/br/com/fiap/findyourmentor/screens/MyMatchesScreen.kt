@@ -18,17 +18,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MailOutline
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,12 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
+import br.com.fiap.findyourmentor.components.NavBar
 import br.com.fiap.findyourmentor.model.Match
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.service.RetrofitFactory
@@ -54,8 +46,9 @@ import retrofit2.Response
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyMatchesScreen(navController: NavController, userConnected: String) {
-    var matchesList  by remember { mutableStateOf(listOf<Match>()) }
-    val callMatch = RetrofitFactory().getMatchService().getMatchesByConnectedUserId(userConnected.toLong())
+    var matchesList by remember { mutableStateOf(listOf<Match>()) }
+    val callMatch =
+        RetrofitFactory().getMatchService().getMatchesByConnectedUserId(userConnected.toLong())
 
     callMatch.enqueue(object : Callback<List<Match>> {
         override fun onResponse(call: Call<List<Match>>, response: Response<List<Match>>) {
@@ -68,61 +61,41 @@ fun MyMatchesScreen(navController: NavController, userConnected: String) {
     })
 
     var likedUsersId: MutableList<Long> = mutableListOf()
-    for (element in matchesList){
+    for (element in matchesList) {
         likedUsersId.add(element.likedUserId)
     }
 
-    var usersList by remember {mutableStateOf(listOf<User>())}
-    var usersListFiltered by remember{mutableStateOf(listOf<User>())}
+    var usersList by remember { mutableStateOf(listOf<User>()) }
+    var usersListFiltered by remember { mutableStateOf(listOf<User>()) }
 
     var call = RetrofitFactory().getUserService().getUsersList();
 
-    call.enqueue(object : Callback<List<User>>{
+    call.enqueue(object : Callback<List<User>> {
         override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
             //TODO mensagem pro usuário se nenhum usuário encontrado
             usersList = response.body()!!
         }
+
         override fun onFailure(call: Call<List<User>>, t: Throwable) {
             Log.i("FIAP", "onResponde: ${t.message}")
         }
     })
-    usersListFiltered = usersList.filter{it.id in likedUsersId}
+    usersListFiltered = usersList.filter { it.id in likedUsersId }
 
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Matches & Mensagens")
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary),
-                actions = {
-                    IconButton(onClick = { navController.navigate("profile/${userConnected}/${userConnected}") }) {
-                        Icon(
-                            imageVector = Icons.Filled.Person,
-                            contentDescription = "Meu perfil",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(onClick = { navController.navigate("myMatches/${userConnected}}") }) {
-                        Icon(
-                            imageVector = Icons.Filled.MailOutline,
-                            contentDescription = "Meus matches",
-                            tint = Color.White
-                        )
-                    }
-                }
-            )
+            NavBar(navController = navController, userConnected = userConnected, "Matches & Mensagens")
         }) { values ->
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(values),
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(values),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
 
-        ){
+        ) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 228.dp)
             ) {
@@ -136,27 +109,27 @@ fun MyMatchesScreen(navController: NavController, userConnected: String) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ProfileItem(user: User){
-   Row ( modifier = Modifier.padding(8.dp)){
-       Column {
-           Image(
-               painter = painterResource(id = R.drawable.contact),
-               contentDescription = null,
-               contentScale = ContentScale.Crop,
-               modifier = Modifier
-                   .size(60.dp)
-                   .clip(CircleShape)
-                   .padding(8.dp)
-           )
-       }
-       Column {
-           Row {
-               Text(text = user.name)
-           }
-           Row {
-               Text(text = "Olá, tudo bem ?")
-           }
-       }
-   }
+private fun ProfileItem(user: User) {
+    Row(modifier = Modifier.padding(8.dp)) {
+        Column {
+            Image(
+                painter = painterResource(id = R.drawable.contact),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(CircleShape)
+                    .padding(8.dp)
+            )
+        }
+        Column {
+            Row {
+                Text(text = user.name)
+            }
+            Row {
+                Text(text = "Olá, tudo bem ?")
+            }
+        }
+    }
     Spacer(modifier = Modifier.height(20.dp))
 }

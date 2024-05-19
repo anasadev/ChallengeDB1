@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
@@ -40,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
 import br.com.fiap.findyourmentor.components.FormText
+import br.com.fiap.findyourmentor.components.NavBar
 import br.com.fiap.findyourmentor.model.Match
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.service.RetrofitFactory
@@ -51,7 +53,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     navController: NavController,
@@ -83,31 +84,7 @@ fun ProfileScreen(
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Perfil")
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                ),
-                actions = {
-                    IconButton(onClick = { navController.navigate("profile/${userConnected}/${userConnected}") }) {
-                        Icon(
-                            imageVector = Icons.Filled.Person,
-                            contentDescription = "Meu perfil",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(onClick = { navController.navigate("myMatches/${userConnected}}") }) {
-                        Icon(
-                            imageVector = Icons.Filled.MailOutline,
-                            contentDescription = "Meus matches",
-                            tint = Color.White
-                        )
-                    }
-                }
-            )
+            NavBar(navController, userConnected, "Perfil")
         }) { values ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -174,8 +151,6 @@ fun ProfileScreen(
         }
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Dialog(
     userConnected: String,
@@ -196,7 +171,6 @@ fun Dialog(
                 isLiked = true
             )
             CoroutineScope(Dispatchers.Main).launch {
-
                 withContext(Dispatchers.IO) {
                     val callMatch = RetrofitFactory().getMatchService().pushMatch(match)
 

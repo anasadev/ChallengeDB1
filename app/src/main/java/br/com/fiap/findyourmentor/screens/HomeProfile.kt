@@ -23,8 +23,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.MailOutline
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -37,8 +35,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,6 +61,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
+import br.com.fiap.findyourmentor.components.NavBar
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.screens.base.UIState
 import br.com.fiap.findyourmentor.screens.util.ComposableLifecycle
@@ -79,14 +76,15 @@ import retrofit2.Response
 @Composable
 fun HomeProfileScreen(
     navController: NavController, userId: String,
-    viewModel: HomeViewModel = hiltViewModel()) {
+    viewModel: HomeViewModel = hiltViewModel()
+) {
 
     val lifecycleOwner by rememberUpdatedState(LocalLifecycleOwner.current)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     viewModel.ObserveLifecycleEvents(lifecycleOwner.lifecycle)
 
-    var connectedUser by remember { mutableStateOf(User(2, "sandra")) }
+    var connectedUser by remember { mutableStateOf(User(2, "Sandra")) }
 
     //Need refactor
     val callUser = RetrofitFactory().getUserService().getUserById(userId.toLong())
@@ -110,70 +108,49 @@ fun HomeProfileScreen(
             Lifecycle.Event.ON_CREATE -> {
                 Log.i("LIFE_CYCLE", "ON_CREATE")
             }
+
             Lifecycle.Event.ON_START -> {
                 Log.i("LIFE_CYCLE", "ON_START")
                 viewModel.getRemoteUsers()
             }
+
             Lifecycle.Event.ON_RESUME -> {
                 Log.i("LIFE_CYCLE", "ON_RESUME")
             }
+
             Lifecycle.Event.ON_PAUSE -> {
                 Log.i("LIFE_CYCLE", "ON_PAUSE")
             }
+
             Lifecycle.Event.ON_STOP -> {
                 Log.i("LIFE_CYCLE", "ON_STOP")
             }
+
             Lifecycle.Event.ON_DESTROY -> {
                 Log.i("LIFE_CYCLE", "ON_DESTROY")
             }
+
             else -> {
                 Log.i("LIFE_CYCLE", "ELSE")
             }
         }
     }
 
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
+    Scaffold(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.White),
         topBar = {
-            TopAppBar(
-                modifier = Modifier,
-                title = {
-                    Text(text = "Usuários")
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                ),
-                actions = {
-                    IconButton(onClick = { navController.navigate("profile/${connectedUser.id}/${connectedUser.id}") }) {
-                        Icon(
-                            imageVector = Icons.Filled.Person,
-                            contentDescription = "Perfil",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(onClick = { navController.navigate("myMatches/${connectedUser.id}") }) {
-                        Icon(
-                            imageVector = Icons.Filled.MailOutline,
-                            contentDescription = "Meus matches",
-                            tint = Color.White
-                        )
-                    }
-                }
-            )
-        }
-    ) {  padding ->
-
+            NavBar(navController, connectedUser.id.toString(), "Usuários")
+        }) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            when(uiState) {
+            when (uiState) {
                 is UIState.Idle -> {}
                 is UIState.Loading -> {
                     ShowLoading(true)
                 }
+
                 is UIState.Success -> {
                     val data = (uiState as UIState.Success).data
                     var dataList by remember { mutableStateOf(data) }
@@ -189,9 +166,11 @@ fun HomeProfileScreen(
                     })
                     ShowGridProfile(connectedUser, dataList, navController)
                 }
+
                 is UIState.Error -> {
                     ShowError((uiState as UIState.Error).error)
                 }
+
                 else -> {}
             }
         }
@@ -208,7 +187,7 @@ fun HomeProfileScreen(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ProfileItem(navController: NavController, user: User, connectedUserId: String){
+private fun ProfileItem(navController: NavController, user: User, connectedUserId: String) {
     Column(
         modifier = Modifier
     ) {
@@ -267,8 +246,8 @@ private fun ProfileItem(navController: NavController, user: User, connectedUserI
                 Button(
                     modifier = Modifier.padding(8.dp),
                     onClick = {
-                    navController.navigate("profile/${user.id}/${connectedUserId}")
-                }) {
+                        navController.navigate("profile/${user.id}/${connectedUserId}")
+                    }) {
                     Text(stringResource(id = R.string.view_profile))
                 }
             }
@@ -301,7 +280,8 @@ private fun ShowSearchBar(onFilter: (String) -> Unit) {
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 74.dp, bottom = 12.dp)) {
+            .padding(top = 74.dp, bottom = 12.dp)
+    ) {
 
         OutlinedTextField(
             modifier = Modifier
@@ -313,7 +293,7 @@ private fun ShowSearchBar(onFilter: (String) -> Unit) {
                 fontWeight = FontWeight.Normal
             ),
             trailingIcon = {
-                if(input.isNotBlank()) {
+                if (input.isNotBlank()) {
                     AnimatedVisibility(visible = true) {
                         IconButton(onClick = {
                             input = ""
@@ -336,12 +316,18 @@ private fun ShowSearchBar(onFilter: (String) -> Unit) {
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.White,
                 focusedContainerColor = Color.LightGray,
-                unfocusedContainerColor = Color.White)
+                unfocusedContainerColor = Color.White
+            )
         )
     }
 }
+
 @Composable
-private fun ShowGridProfile(connectedUser: User, usersList: MutableList<User>, navController: NavController){
+private fun ShowGridProfile(
+    connectedUser: User,
+    usersList: MutableList<User>,
+    navController: NavController
+) {
 
     val usersListFiltered = if (connectedUser.profileType == "mentor") {
         usersList.filter { u -> u.profileType == "aprendiz" }.toMutableList()
@@ -374,7 +360,8 @@ fun ShowError(error: String?) {
             fontSize = 16.sp,
             text = error ?: "Error",
             color = Color.Red,
-            textAlign = TextAlign.Start)
+            textAlign = TextAlign.Start
+        )
     }
 }
 
