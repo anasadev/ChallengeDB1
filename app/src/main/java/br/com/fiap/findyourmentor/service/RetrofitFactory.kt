@@ -16,4 +16,7 @@ class RetrofitFactory {
     fun getUserService(): UserService {
         return retrofitFactory.create(UserService::class.java)
     }
+    fun getMatchService(): MatchService {
+        return retrofitFactory.create(MatchService::class.java)
+    }
 }

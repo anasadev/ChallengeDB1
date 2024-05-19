@@ -45,6 +45,10 @@ import br.com.fiap.findyourmentor.database.repository.MatchRepository
 import br.com.fiap.findyourmentor.model.Match
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.service.RetrofitFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -137,12 +141,30 @@ fun ProfileScreen(
                     Button(onClick = {
                         val match = Match(
                             id = 0,
-                            activeUserId = userConnected.toLong(),
+                            userId = userConnected.toLong(),
                             likedUserId = userId.toLong(),
                             isLiked = false
                         )
-                        matchRepository.save(match)
-                        navController.navigate("home/${userConnected}")
+                        CoroutineScope(Dispatchers.Main).launch {
+
+                            withContext(Dispatchers.IO) {
+                                val callMatch = RetrofitFactory().getMatchService().pushMatch(match)
+
+                                callMatch.enqueue(object : Callback<Match> {
+                                    override fun onResponse(
+                                        call: Call<Match>,
+                                        response: Response<Match>
+                                    ) {
+                                        navController.navigate("home/${userConnected}")
+                                    }
+
+                                    override fun onFailure(call: Call<Match>, t: Throwable) {
+                                        Log.i("FIAP", t.stackTrace.toString())
+                                    }
+
+                                })
+                            }
+                        }
                     }) {
                         Text(stringResource(id = R.string.unlike_profile))
                     }
@@ -174,11 +196,29 @@ fun Dialog(
             openAlert.value = true
             val match = Match(
                 id = 0,
-                activeUserId = userConnected.toLong(),
+                userId = userConnected.toLong(),
                 likedUserId = userId.toLong(),
                 isLiked = true
             )
-            matchRepository.save(match)
+            CoroutineScope(Dispatchers.Main).launch {
+
+                withContext(Dispatchers.IO) {
+                    val callMatch = RetrofitFactory().getMatchService().pushMatch(match)
+
+                    callMatch.enqueue(object : Callback<Match> {
+                        override fun onResponse(
+                            call: Call<Match>,
+                            response: Response<Match>
+                        ) {
+                        }
+
+                        override fun onFailure(call: Call<Match>, t: Throwable) {
+                            Log.i("FIAP", t.stackTrace.toString())
+                        }
+
+                    })
+                }
+            }
         }) {
             Text(stringResource(id = R.string.like_profile))
         }

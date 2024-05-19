@@ -1,13 +1,11 @@
 package br.com.fiap.findyourmentor.screens
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowColumn
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -27,7 +25,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -46,45 +43,50 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import br.com.fiap.findyourmentor.R
+import br.com.fiap.findyourmentor.model.Match
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.service.RetrofitFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyMatchesScreen(navController: NavController, userConnected: String) {
-//    val context = LocalContext.current
-//    val userRepository = UserRepository(context)
-//    val matchRepository = MatchRepository(context)
-//    val matchesList = matchRepository.findLikes(userConnected.toLong())
-//    val matchesListMock: List<Long> = listOf(11,12)
+    var matchesList  by remember { mutableStateOf(listOf<Match>()) }
+    val callMatch = RetrofitFactory().getMatchService().getMatchesByConnectedUserId(userConnected.toLong())
 
-//
-//    ça marche
-//    for (element in matchesListMock){
-//        usersList.add(userRepository.findUserById(element))
-//    }
-//
-//    for (element in matchesList){
-//        usersList.add(userRepository.findUserById(element))
-//    }
-
-    var usersList by remember { mutableStateOf(listOf<User>()) }
-    val call = RetrofitFactory().getUserService().getUsersList();
-
-    call.enqueue(object : Callback<List<User>> {
-        override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
-            //TODO mensagem pro usuário se nenhum usuário encontrado
-            usersList = response.body()!!
+    callMatch.enqueue(object : Callback<List<Match>> {
+        override fun onResponse(call: Call<List<Match>>, response: Response<List<Match>>) {
+            matchesList = response.body()!!
         }
 
-        override fun onFailure(call: Call<List<User>>, t: Throwable) {
+        override fun onFailure(call: Call<List<Match>>, t: Throwable) {
             Log.i("FIAP", "onResponde: ${t.message}")
         }
     })
 
+    var likedUsersId: MutableList<Long> = mutableListOf()
+    for (element in matchesList){
+        likedUsersId.add(element.likedUserId)
+    }
+
+    var usersList by remember {mutableStateOf(listOf<User>())}
+    var usersListFiltered by remember{mutableStateOf(listOf<User>())}
+
+    var call = RetrofitFactory().getUserService().getUsersList();
+
+    call.enqueue(object : Callback<List<User>>{
+        override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
+            //TODO mensagem pro usuário se nenhum usuário encontrado
+            usersList = response.body()!!
+        }
+        override fun onFailure(call: Call<List<User>>, t: Throwable) {
+            Log.i("FIAP", "onResponde: ${t.message}")
+        }
+    })
+    usersListFiltered = usersList.filter{it.id in likedUsersId}
 
 
     Scaffold(modifier = Modifier.fillMaxSize(),
@@ -124,7 +126,7 @@ fun MyMatchesScreen(navController: NavController, userConnected: String) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 228.dp)
             ) {
-                items(usersList) {
+                items(usersListFiltered) {
                     ProfileItem(it)
                 }
             }
