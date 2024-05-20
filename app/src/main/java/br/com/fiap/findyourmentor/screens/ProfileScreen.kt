@@ -11,23 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MailOutline
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,6 +37,7 @@ import br.com.fiap.findyourmentor.components.NavBar
 import br.com.fiap.findyourmentor.model.Match
 import br.com.fiap.findyourmentor.model.User
 import br.com.fiap.findyourmentor.service.RetrofitFactory
+import br.com.fiap.findyourmentor.viewmodel.ProfileScreenViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -58,30 +50,18 @@ import retrofit2.Response
 fun ProfileScreen(
     navController: NavController,
     userId: String,
-    userConnected: String
+    userConnected: String,
+    profileScreenViewModel: ProfileScreenViewModel
 ) {
-    var call = RetrofitFactory().getUserService().getUserById(userId.toLong())
-    var user by remember {
-        mutableStateOf(User())
-    }
 
-    call.enqueue(object : Callback<User> {
-        override fun onResponse(call: Call<User>, response: Response<User>) {
-            user = response.body()!!
-        }
+    val user by profileScreenViewModel.user.observeAsState(initial = null)
+    profileScreenViewModel.findUser(userId.toLong())
 
-        override fun onFailure(call: Call<User>, t: Throwable) {
-            Log.i("FIAP", "onResponde: ${t.message}")
-        }
-    })
-
-
-    var userName = user.name
-    var profileType = user.profileType
+    val userName = user?.name
+    val profileType = user?.profileType
     var interestsText = ""
-    if (profileType == "aprendiz") interestsText =
-        stringResource(id = R.string.interests_text_learner) else interestsText =
-        stringResource(id = R.string.interests_text_mentor)
+    interestsText =
+        if (profileType == "aprendiz") stringResource(id = R.string.interests_text_learner) else stringResource(id = R.string.interests_text_mentor)
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -101,48 +81,25 @@ fun ProfileScreen(
                     .size(70.dp)
                     .clip(CircleShape)
             )
-            FormText(text = userName)
-            FormText(text = user.profileType.replaceFirstChar(Char::uppercaseChar))
+            if (userName != null) {
+                FormText(text = userName)
+            }
+            user?.profileType?.let { FormText(text = it.replaceFirstChar(Char::uppercaseChar)) }
             Spacer(modifier = Modifier.height(20.dp))
-            FormText(text = stringResource(id = R.string.user_location) + ": ${user.location}")
+            FormText(text = stringResource(id = R.string.user_location) + ": ${user?.location}")
             Spacer(modifier = Modifier.height(20.dp))
-            FormText(text = stringResource(id = R.string.user_presentation) + ": ${user.presentation}")
+            FormText(text = stringResource(id = R.string.user_presentation) + ": ${user?.presentation}")
             Spacer(modifier = Modifier.height(20.dp))
-            FormText(text = "$interestsText: ${user.interestsList}")
+            FormText(text = "$interestsText: ${user?.interestsList}")
             Spacer(modifier = Modifier.height(20.dp))
-            FormText(text = stringResource(id = R.string.user_availability) + ": ${user.availability}")
+            FormText(text = stringResource(id = R.string.user_availability) + ": ${user?.availability}")
             Spacer(modifier = Modifier.height(20.dp))
-            FormText(text = stringResource(id = R.string.user_experience) + ": ${user.experience}")
+            FormText(text = stringResource(id = R.string.user_experience) + ": ${user?.experience}")
             Spacer(modifier = Modifier.height(20.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (userId != userConnected) {
                     Button(colors = ButtonDefaults.buttonColors(Color.Red), onClick = {
-                        val match = Match(
-                            id = 0,
-                            userId = userConnected.toLong(),
-                            likedUserId = userId.toLong(),
-                            isLiked = false
-                        )
-                        CoroutineScope(Dispatchers.Main).launch {
-
-                            withContext(Dispatchers.IO) {
-                                val callMatch = RetrofitFactory().getMatchService().pushMatch(match)
-
-                                callMatch.enqueue(object : Callback<Match> {
-                                    override fun onResponse(
-                                        call: Call<Match>,
-                                        response: Response<Match>
-                                    ) {
-                                        navController.navigate("home/${userConnected}")
-                                    }
-
-                                    override fun onFailure(call: Call<Match>, t: Throwable) {
-                                        Log.i("FIAP", t.stackTrace.toString())
-                                    }
-
-                                })
-                            }
-                        }
+                        profileScreenViewModel.unlikeUser(userId, userConnected, navController)
                     }) {
                         Text(stringResource(id = R.string.unlike_profile))
                     }
@@ -150,7 +107,9 @@ fun ProfileScreen(
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (userId != userConnected) {
-                    Dialog(userConnected, userId, userName, navController)
+                    if (userName != null) {
+                        Dialog(userConnected, userId, userName, navController, profileScreenViewModel)
+                    }
                 }
             }
         }
@@ -161,38 +120,16 @@ fun Dialog(
     userConnected: String,
     userId: String,
     userName: String,
-    navController: NavController
+    navController: NavController,
+    profileScreenViewModel: ProfileScreenViewModel
 ) {
     Column {
         val openAlert = remember {
             mutableStateOf(false)
         }
         Button(colors = ButtonDefaults.buttonColors(Color(0xFF175732)), onClick = {
+            profileScreenViewModel.likeUser(userId, userConnected)
             openAlert.value = true
-            val match = Match(
-                id = 0,
-                userId = userConnected.toLong(),
-                likedUserId = userId.toLong(),
-                isLiked = true
-            )
-            CoroutineScope(Dispatchers.Main).launch {
-                withContext(Dispatchers.IO) {
-                    val callMatch = RetrofitFactory().getMatchService().pushMatch(match)
-
-                    callMatch.enqueue(object : Callback<Match> {
-                        override fun onResponse(
-                            call: Call<Match>,
-                            response: Response<Match>
-                        ) {
-                        }
-
-                        override fun onFailure(call: Call<Match>, t: Throwable) {
-                            Log.i("FIAP", t.stackTrace.toString())
-                        }
-
-                    })
-                }
-            }
         }) {
             Text(stringResource(id = R.string.like_profile))
         }
@@ -210,8 +147,6 @@ fun Dialog(
                 text = { MatchMessageScreen(userName = userName) }
             )
         }
-
-
     }
 }
 

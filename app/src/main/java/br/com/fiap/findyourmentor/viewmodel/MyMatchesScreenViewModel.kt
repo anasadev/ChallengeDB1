@@ -21,8 +21,8 @@ class MyMatchesScreenViewModel: ViewModel() {
     val matchesList: LiveData<List<Match>> = _matchesList
 
 
-    fun findMatchesByUser(userConnectedId: Long): List<Match> {
-        var matchesList: List<Match> = mutableListOf()
+    fun findMatchesByUser(userConnectedId: Long) {
+
         val callMatch =
             RetrofitFactory().getMatchService().getMatchesByConnectedUserId(userConnectedId)
 
@@ -36,12 +36,11 @@ class MyMatchesScreenViewModel: ViewModel() {
                 Log.i("FIAP", "onResponde: ${t.message}")
             }
         })
-        return matchesList
     }
 
-     fun findAllUsers(): List<User>{
+     fun findAllUsers(){
         val call = RetrofitFactory().getUserService().getUsersList()
-        var allUsers: List<User> = mutableListOf()
+
         call.enqueue(object : Callback<List<User>> {
             override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
                 _usersList.value = response.body()!!
@@ -50,7 +49,6 @@ class MyMatchesScreenViewModel: ViewModel() {
                 Log.i("FIAP", "onResponde: ${t.message}")
             }
         })
-        return allUsers
     }
 
     fun usersListFilter(listUsers: List<User>?, listMatches: List<Match>?) {
