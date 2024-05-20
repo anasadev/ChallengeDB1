@@ -21,6 +21,7 @@ import br.com.fiap.findyourmentor.screens.ProfileScreen
 import br.com.fiap.findyourmentor.screens.ProfileTypeScreen
 import br.com.fiap.findyourmentor.screens.UserInfoScreen
 import br.com.fiap.findyourmentor.ui.theme.FindYourMentorTheme
+import br.com.fiap.findyourmentor.viewmodel.MyMatchesScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -80,7 +81,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = "myMatches/{userId}") {
                             val userId = it.arguments?.getString("userId")
-                            MyMatchesScreen(navController = navController, userConnected = userId!!)
+                            MyMatchesScreen(navController = navController, userConnected = userId!!, MyMatchesScreenViewModel())
                         }
 
                     }

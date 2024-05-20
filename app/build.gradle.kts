@@ -107,4 +107,6 @@ dependencies {
     //gson
     implementation("com.google.code.gson:gson:2.10.1")
 
+    implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
+
 }
