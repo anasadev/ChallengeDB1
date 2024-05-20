@@ -50,8 +50,8 @@ fun UserInfoScreen(navController: NavController) {
         "1-2 ano(s)",
         "2-3 anos",
         "4-5 anos",
-        "Mais de 5",
-        "Mais de 10"
+        "Mais de 5 anos",
+        "Mais de 10 anos"
     )
     var experienceYears by remember {
         mutableStateOf(listExperienceYears[0])
@@ -115,7 +115,7 @@ fun UserInfoScreen(navController: NavController) {
         }
         Spacer(modifier = Modifier.height(20.dp))
 
-        availability = dropDownMenu(listAvailability, availability, "Disponibilidade")
+        availability = dropDownMenu(listAvailability, availability, stringResource(id = R.string.user_availability))
         Spacer(modifier = Modifier.height(20.dp))
 
         experienceYears = dropDownMenu(

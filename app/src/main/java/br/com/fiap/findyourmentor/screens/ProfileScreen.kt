@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -91,6 +92,7 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(values)
         ) {
+            Spacer(modifier = Modifier.height(20.dp))
             Image(
                 painter = painterResource(id = R.drawable.contact),
                 contentDescription = null,
@@ -99,19 +101,22 @@ fun ProfileScreen(
                     .size(70.dp)
                     .clip(CircleShape)
             )
-            FormText(text = stringResource(id = R.string.name) + ": $userName")
+            FormText(text = userName)
+            FormText(text = user.profileType.replaceFirstChar(Char::uppercaseChar))
             Spacer(modifier = Modifier.height(20.dp))
             FormText(text = stringResource(id = R.string.user_location) + ": ${user.location}")
-            Spacer(modifier = Modifier.height(20.dp))
-            FormText(text = stringResource(id = R.string.profile_type) + ": ${user.profileType}")
             Spacer(modifier = Modifier.height(20.dp))
             FormText(text = stringResource(id = R.string.user_presentation) + ": ${user.presentation}")
             Spacer(modifier = Modifier.height(20.dp))
             FormText(text = "$interestsText: ${user.interestsList}")
             Spacer(modifier = Modifier.height(20.dp))
+            FormText(text = stringResource(id = R.string.user_availability) + ": ${user.availability}")
+            Spacer(modifier = Modifier.height(20.dp))
+            FormText(text = stringResource(id = R.string.user_experience) + ": ${user.experience}")
+            Spacer(modifier = Modifier.height(20.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (userId != userConnected) {
-                    Button(onClick = {
+                    Button(colors = ButtonDefaults.buttonColors(Color.Red), onClick = {
                         val match = Match(
                             id = 0,
                             userId = userConnected.toLong(),
@@ -162,7 +167,7 @@ fun Dialog(
         val openAlert = remember {
             mutableStateOf(false)
         }
-        Button(onClick = {
+        Button(colors = ButtonDefaults.buttonColors(Color(0xFF175732)), onClick = {
             openAlert.value = true
             val match = Match(
                 id = 0,

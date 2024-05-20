@@ -15,8 +15,6 @@ fun FormText(text: String) {
         text = text,
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
-        fontSize = 24.sp,
-        fontWeight = FontWeight.Bold,
-        fontFamily = FontFamily.Monospace
+        fontSize = 20.sp,
     )
 }

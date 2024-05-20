@@ -79,7 +79,9 @@ fun MyMatchesScreen(navController: NavController, userConnected: String) {
     var usersListFiltered by remember { mutableStateOf(listOf<User>()) }
     if(matchesList.isNotEmpty()){
         for (element in matchesList) {
-            likedUsersId.add(element.likedUserId)
+            if(element.isLiked){
+                likedUsersId.add(element.likedUserId)
+            }
         }
         usersListFiltered = usersList.filter { it.id in likedUsersId }
     }

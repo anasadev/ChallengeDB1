@@ -140,7 +140,7 @@ fun HomeProfileScreen(
         .fillMaxSize()
         .background(Color.White),
         topBar = {
-            NavBar(navController, connectedUser.id.toString(), "Usuários")
+            NavBar(navController, connectedUser.id.toString(), "Melhores matches pra você")
         }) {
         Column(
             modifier = Modifier.fillMaxSize()

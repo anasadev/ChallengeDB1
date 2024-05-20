@@ -12,6 +12,9 @@
     <string name="user_presentation">About me</string>
     <string name="required_presentation">A presentation is required</string>
     <string name="user_presentation_placeholder">Tell us something about you!</string>
+    <string name="user_availability">Availability</string>
+    <string name="user_experience">Experience</string>
+    <string name="user_experience_long">Years of experience in IT</string>
     <string name="continue_button">Continue</string>
     <string name="required_checkbox">Select at least one option</string>
     <string name="interests_text_mentor">I can teach</string>

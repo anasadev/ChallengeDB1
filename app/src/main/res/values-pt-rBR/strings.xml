@@ -12,6 +12,9 @@
     <string name="user_presentation">Apresentação</string>
     <string name="required_presentation">A apresentação é obrigatória</string>
     <string name="user_presentation_placeholder">Conte um pouco sobre você!</string>
+    <string name="user_availability">Disponibilidade</string>
+    <string name="user_experience">Experiência</string>
+    <string name="user_experience_long">Tempo de experiência na área de tecnologia</string>
     <string name="continue_button">Continuar</string>
     <string name="interests_text_mentor">Posso ensinar</string>
     <string name="interests_text_learner">Quero aprender</string>
