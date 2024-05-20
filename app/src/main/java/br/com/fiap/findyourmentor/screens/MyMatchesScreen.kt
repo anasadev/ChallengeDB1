@@ -35,16 +35,26 @@ import br.com.fiap.findyourmentor.viewmodel.MyMatchesScreenViewModel
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun MyMatchesScreen(navController: NavController, userConnected: String, myMatchesScreenViewModel: MyMatchesScreenViewModel) {
-    val matchesList by myMatchesScreenViewModel.matchesList.observeAsState(initial = null)
+fun MyMatchesScreen(
+    navController: NavController,
+    userConnected: String,
+    myMatchesScreenViewModel: MyMatchesScreenViewModel
+) {
     val usersListFiltered by myMatchesScreenViewModel.usersListFiltered.observeAsState(initial = null)
+    val matchesList by myMatchesScreenViewModel.matchesList.observeAsState(initial = null)
+    val usersList by myMatchesScreenViewModel.usersList.observeAsState(initial = null)
 
     myMatchesScreenViewModel.findMatchesByUser(userConnected.toLong())
-    myMatchesScreenViewModel.usersListFiltered(matchesList)
+    myMatchesScreenViewModel.findAllUsers()
+    myMatchesScreenViewModel.usersListFilter(usersList, matchesList)
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
-            NavBar(navController = navController, userConnected = userConnected, "Matches & Mensagens")
+            NavBar(
+                navController = navController,
+                userConnected = userConnected,
+                "Matches & Mensagens"
+            )
         }) { values ->
         Column(
             modifier = Modifier
@@ -55,7 +65,7 @@ fun MyMatchesScreen(navController: NavController, userConnected: String, myMatch
             verticalArrangement = Arrangement.Top
 
         ) {
-            if(usersListFiltered?.isNotEmpty() == true){
+            if (usersListFiltered != null && usersListFiltered!!.isNotEmpty()) {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(minSize = 228.dp)
                 ) {

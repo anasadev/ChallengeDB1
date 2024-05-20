@@ -13,14 +13,16 @@ import retrofit2.Response
 
 class MyMatchesScreenViewModel: ViewModel() {
 
-    private val _matchesList = MutableLiveData<List<Match>>()
-    val matchesList: LiveData<List<Match>> = _matchesList
     private val _usersList = MutableLiveData<List<User>>()
     val usersList: LiveData<List<User>> = _usersList
     private val _usersListFiltered = MutableLiveData<List<User>>()
     val usersListFiltered: LiveData<List<User>> = _usersListFiltered
+    private val _matchesList = MutableLiveData<List<Match>>()
+    val matchesList: LiveData<List<Match>> = _matchesList
 
-    fun findMatchesByUser(userConnectedId: Long){
+
+    fun findMatchesByUser(userConnectedId: Long): List<Match> {
+        var matchesList: List<Match> = mutableListOf()
         val callMatch =
             RetrofitFactory().getMatchService().getMatchesByConnectedUserId(userConnectedId)
 
@@ -30,15 +32,16 @@ class MyMatchesScreenViewModel: ViewModel() {
                     _matchesList.value = response.body()!!
                 }
             }
-
             override fun onFailure(call: Call<List<Match>>, t: Throwable) {
                 Log.i("FIAP", "onResponde: ${t.message}")
             }
         })
+        return matchesList
     }
 
-    private fun findAllUsers(){
-        var call = RetrofitFactory().getUserService().getUsersList()
+     fun findAllUsers(): List<User>{
+        val call = RetrofitFactory().getUserService().getUsersList()
+        var allUsers: List<User> = mutableListOf()
         call.enqueue(object : Callback<List<User>> {
             override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
                 _usersList.value = response.body()!!
@@ -47,16 +50,17 @@ class MyMatchesScreenViewModel: ViewModel() {
                 Log.i("FIAP", "onResponde: ${t.message}")
             }
         })
+        return allUsers
     }
 
-    fun usersListFiltered(matchesList: List<Match>?) {
-        findAllUsers()
+    fun usersListFilter(listUsers: List<User>?, listMatches: List<Match>?) {
         val likedUsersId: MutableList<Long> = mutableListOf()
-        matchesList?.forEach{
+
+        listMatches?.forEach{
             if(it.isLiked){
                 likedUsersId.add(it.likedUserId)
             }
         }
-        _usersListFiltered.value = _usersList.value?.filter { it.id in likedUsersId }
+        _usersListFiltered.value = listUsers?.filter { it.id in likedUsersId }
     }
 }
