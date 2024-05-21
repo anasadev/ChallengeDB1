@@ -47,6 +47,6 @@ class HomeViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        Log.i("CountriesViewModel", "CLEARED JOB")
+        Log.i("HomeViewModel", "CLEARED JOB")
     }
 }
