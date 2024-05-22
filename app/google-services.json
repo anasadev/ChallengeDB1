@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "97115444250",
+    "project_id": "findyourmentor-63cfd",
+    "storage_bucket": "findyourmentor-63cfd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97115444250:android:6fce9ab9598d8ad9f26da3",
+        "android_client_info": {
+          "package_name": "br.com.fiap.findyourmentor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW0-wzTHjdxNsNoNXfFh8TGwwdO5BKJgs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

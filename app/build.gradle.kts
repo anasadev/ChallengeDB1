@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id ("com.google.gms.google-services")
 }
 
 android {
@@ -32,11 +33,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -108,5 +109,13 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
     implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
+
+    //firebase messaging
+//    implementation (platform("com.google.firebase:firebase-bom:31.0.2"))
+//    implementation ("com.google.firebase:firebase-messaging-ktx")
+//    implementation("com.google.firebase:firebase-messaging:23.0.5")
+
+    //firebase messaging
+    implementation("com.google.firebase:firebase-messaging:23.0.5")
 
 }
